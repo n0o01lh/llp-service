@@ -1,4 +1,4 @@
-module github.com/n0o01lh/llm
+module github.com/n0o01lh/llp
 
 go 1.18
 
