@@ -52,8 +52,16 @@ jobs:
 workflows:
   build-and-test:
     jobs:
-      - test-go
+      - test-go:
+          filters:
+            branches:
+              only:
+                - staging
       - build-go-executables:
+          filters:
+            branches:
+              only:
+                - staging
           requires:
             - test-go
       #- deploy:
