@@ -1,7 +1,7 @@
 package domain
 
 type Resource struct {
-	ID          uint    `json:"id"`
+	Id          uint    `json:"id"`
 	Title       string  `json:"title"`
 	Description string  `json:"description"`
 	Type        string  `json:"resource_type"`
@@ -13,7 +13,7 @@ type Resource struct {
 func NewResource(id uint, title string, description string, resource_type string, url string, price float64, teacher_id int) *Resource {
 
 	return &Resource{
-		ID:          id,
+		Id:          id,
 		Title:       title,
 		Description: description,
 		Type:        resource_type,

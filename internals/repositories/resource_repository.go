@@ -25,7 +25,7 @@ func (r *ResourceRepository) Create(resource *domain.Resource) (*domain.Resource
 	var newResource *domain.Resource
 
 	r.Database.Create(&resource)
-	r.Database.Find(&newResource, resource.ID)
+	r.Database.Find(&newResource, resource.Id)
 
 	if newResource == nil {
 		return nil, errors.New("resource not created")
