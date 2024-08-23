@@ -27,13 +27,13 @@ jobs:
           command: mkdir -p ~/artifacts
       - run:
           name: Build executables
-          command: go build -o ~/artifacts cmd/main.go
+          command: go build -o ~/artifacts/llp cmd/main.go
       - run:
           name: Remove previous artifact
-          command: ssh -oStrictHostKeyChecking=no -v $USER@$DNS "rm -rf src || true"
+          command: ssh -oStrictHostKeyChecking=no -v $USER@$DNS "rm -rf llp || true"
       - run:
           name: Copy artifact to ec2
-          command: scp -oStrictHostKeyChecking=no -v ~/artifacts/src $USER@$DNS:/home/$USER
+          command: scp -oStrictHostKeyChecking=no -v ~/artifacts/llp $USER@$DNS:/home/$USER
       - run:
           name: Run artifact
           command: ssh -oStrictHostKeyChecking=no -v $USER@$DNS "sudo systemctl restart llp || sudo systemctl start llp"
