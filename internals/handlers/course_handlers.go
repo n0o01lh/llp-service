@@ -39,7 +39,7 @@ func (h *CourseHandlers) Create(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	log.Info("course created", course)
+	log.Info("course created", courseCreated)
 
 	response, _ := json.Marshal(&courseCreated)
 
