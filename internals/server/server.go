@@ -6,16 +6,18 @@ import (
 )
 
 type Server struct {
-	resourceHandlers ports.ResourceHandlers
-	courseHandlers   ports.CourseHandlers
+	resourceHandlers       ports.ResourceHandlers
+	courseHandlers         ports.CourseHandlers
+	resourceCourseHandlers ports.ResourceCourseHandlers
 	//middlewares here
 	//every hanlders will be here
 }
 
-func NewServer(rHandlers ports.ResourceHandlers, cHandlers ports.CourseHandlers) *Server {
+func NewServer(rHandlers ports.ResourceHandlers, cHandlers ports.CourseHandlers, rcHandlers ports.ResourceCourseHandlers) *Server {
 	return &Server{
-		resourceHandlers: rHandlers,
-		courseHandlers:   cHandlers,
+		resourceHandlers:       rHandlers,
+		courseHandlers:         cHandlers,
+		resourceCourseHandlers: rcHandlers,
 	}
 }
 
@@ -38,6 +40,9 @@ func (s *Server) Initialize() {
 	courseRoutes.Get("/find", s.courseHandlers.FindOne)
 	courseRoutes.Patch("/update/:id", s.courseHandlers.Update)
 	courseRoutes.Delete("/delete/:id", s.courseHandlers.Delete)
+	//resource_course adding resource to course
+	courseRoutes.Post("/add-one-resource", s.resourceCourseHandlers.AddResourceToCourse)
+	courseRoutes.Post("/add-resources", s.resourceCourseHandlers.AsignCourseToResources)
 
 	app.Listen(":3000")
 
