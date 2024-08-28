@@ -38,7 +38,7 @@ func (r *ResourceRepository) ListAll() ([]*domain.Resource, error) {
 
 	var resourceList []*domain.Resource
 
-	r.Database.Find(&resourceList)
+	r.Database.Preload("Courses").Find(&resourceList)
 
 	if resourceList == nil {
 		return nil, errors.New("resources not found")
@@ -51,7 +51,7 @@ func (r *ResourceRepository) FindOne(id uint) (*domain.Resource, error) {
 
 	var resource *domain.Resource
 
-	row := r.Database.Find(&resource, id)
+	row := r.Database.Preload("Courses").Find(&resource, id)
 
 	if row.RowsAffected == 0 {
 		return nil, errors.New("resource not found")

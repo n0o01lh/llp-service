@@ -38,7 +38,7 @@ func (r *CourseRepository) ListAll() ([]*domain.Course, error) {
 
 	var courseList []*domain.Course
 
-	r.Database.Find(&courseList)
+	r.Database.Preload("Resources").Find(&courseList)
 
 	if courseList == nil {
 		return nil, errors.New("courses not found")
@@ -51,7 +51,7 @@ func (r *CourseRepository) FindOne(id uint) (*domain.Course, error) {
 
 	var course *domain.Course
 
-	row := r.Database.Find(&course, id)
+	row := r.Database.Preload("Resources").Find(&course, id)
 
 	if row.RowsAffected == 0 {
 		return nil, errors.New("course not found")

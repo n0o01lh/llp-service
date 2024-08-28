@@ -46,7 +46,11 @@ func main() {
 	courseService := services.NewCourseService(courseRepository)
 	courseHandlers := handlers.NewsCourseHandlers(courseService)
 
-	server := server.NewServer(resourceHandlers, courseHandlers)
+	resourceCourseRepository := repositories.NewResourceCourseRepository(db_configuration.Database)
+	resourceCourseService := services.NewResourceCourseService(resourceCourseRepository, courseRepository)
+	resourceCourseHandlers := handlers.NewResourceCourseHandlers(resourceCourseService)
+
+	server := server.NewServer(resourceHandlers, courseHandlers, resourceCourseHandlers)
 
 	server.Initialize()
 }
