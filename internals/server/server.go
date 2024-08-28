@@ -1,7 +1,12 @@
 package server
 
 import (
+	"io"
+	"os"
+
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/n0o01lh/llp/internals/core/ports"
 )
 
@@ -24,6 +29,21 @@ func NewServer(rHandlers ports.ResourceHandlers, cHandlers ports.CourseHandlers,
 func (s *Server) Initialize() {
 
 	app := fiber.New()
+
+	//app.Use(logger.New())
+
+	file, err := os.OpenFile("llp-requests.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+	}
+	defer file.Close()
+	app.Use(logger.New(logger.Config{
+		Output: file,
+	}))
+
+	serverLogsFile, _ := os.OpenFile("llp-server.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	iw := io.MultiWriter(os.Stdout, serverLogsFile)
+	log.SetOutput(iw)
 
 	resourceRoutes := app.Group("/resource")
 
