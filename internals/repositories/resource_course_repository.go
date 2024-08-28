@@ -59,3 +59,18 @@ func (rc *ResourceCourseRepository) AddResourceToCourse(resourceId, courseId uin
 func (rc *ResourceCourseRepository) AsignCourseToResources(resources []uint, courseId uint) (*domain.ResourceCourse, error) {
 	return nil, nil
 }
+
+func (rc *ResourceCourseRepository) RemoveResourceFromCourse(resourceId, courseId uint) error {
+
+	var resourceCourse *domain.ResourceCourse
+
+	rc.database.Table("resources_courses").Where("resource_id=? and course_id=?", resourceId, courseId).Find(&resourceCourse)
+
+	result := rc.database.Table("resources_courses").Delete(&resourceCourse)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}

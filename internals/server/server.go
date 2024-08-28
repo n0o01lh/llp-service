@@ -43,6 +43,7 @@ func (s *Server) Initialize() {
 	//resource_course adding resource to course
 	courseRoutes.Post("/add-one-resource", s.resourceCourseHandlers.AddResourceToCourse)
 	courseRoutes.Post("/add-resources", s.resourceCourseHandlers.AsignCourseToResources)
+	courseRoutes.Delete("/remove-resource", s.resourceCourseHandlers.RemoveResourceFromCourse)
 
 	app.Listen(":3000")
 

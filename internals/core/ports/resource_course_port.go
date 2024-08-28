@@ -6,16 +6,19 @@ import (
 )
 
 type ResourceCourseService interface {
-	AddResourceToCourse(resourceId, courseId uint) (*domain.Course, error)
-	AsignCourseToResources(resources []uint, courseId uint) (*domain.Course, error)
+	AddResourceToCourse(resourceId, courseId uint) (*domain.ResourceCourse, error)
+	AsignCourseToResources(resources []any, courseId uint) ([]*domain.ResourceCourseResponse, error)
+	RemoveResourceFromCourse(resourceId, courseId uint) error
 }
 
 type ResourceCourseRepository interface {
 	AddResourceToCourse(resourceId, courseId uint) (*domain.ResourceCourse, error)
 	AsignCourseToResources(resources []uint, courseId uint) (*domain.ResourceCourse, error)
+	RemoveResourceFromCourse(resourceId, courseId uint) error
 }
 
 type ResourceCourseHandlers interface {
 	AddResourceToCourse(ctx *fiber.Ctx) error
 	AsignCourseToResources(ctx *fiber.Ctx) error
+	RemoveResourceFromCourse(ctx *fiber.Ctx) error
 }
