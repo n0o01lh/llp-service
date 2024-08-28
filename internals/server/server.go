@@ -41,7 +41,7 @@ func (s *Server) Initialize() {
 		Output: file,
 	}))
 
-	serverLogsFile, _ := os.OpenFile("llp-server.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	serverLogsFile, _ := os.OpenFile("llp-server.log", os.O_CREATE|os.O_RDWR|os.O_APPEND, 0666)
 	iw := io.MultiWriter(os.Stdout, serverLogsFile)
 	log.SetOutput(iw)
 
