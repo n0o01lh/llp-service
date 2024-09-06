@@ -11,6 +11,7 @@ type ResourceService interface {
 	FindOne(id uint) (*domain.Resource, error)
 	Update(id uint, resource *domain.Resource) (*domain.Resource, error)
 	Delete(id uint) error
+	Search(criteria string) ([]*domain.Resource, error)
 }
 
 type ResourceRepository interface {
@@ -19,6 +20,7 @@ type ResourceRepository interface {
 	FindOne(id uint) (*domain.Resource, error)
 	Update(id uint, resource *domain.Resource) (*domain.Resource, error)
 	Delete(id uint) error
+	Search(criteria string) ([]*domain.Resource, error)
 }
 
 type ResourceHandlers interface {
@@ -27,4 +29,5 @@ type ResourceHandlers interface {
 	FindOne(context *fiber.Ctx) error
 	Update(context *fiber.Ctx) error
 	Delete(context *fiber.Ctx) error
+	Search(context *fiber.Ctx) error
 }

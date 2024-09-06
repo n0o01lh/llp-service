@@ -87,3 +87,16 @@ func (r *ResourceRepository) Delete(id uint) error {
 
 	return nil
 }
+
+func (r *ResourceRepository) Search(criteria string) ([]*domain.Resource, error) {
+
+	var resources []*domain.Resource
+
+	result := r.Database.Where("lower(title) LIKE lower(?)", "%"+criteria+"%").Table("resources").Find(&resources)
+
+	if result.Error != nil {
+		return nil, errors.New("error performing search on database")
+	}
+
+	return resources, nil
+}

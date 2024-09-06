@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -136,5 +137,26 @@ func (h *ResourceHandlers) Delete(ctx *fiber.Ctx) error {
 	}
 
 	ctx.SendStatus(http.StatusOK)
+	return nil
+}
+
+func (h *ResourceHandlers) Search(ctx *fiber.Ctx) error {
+	criteria := ctx.Query("title")
+
+	if criteria == "" {
+		return errors.New("Criteria is empty")
+	}
+
+	resources, err := h.resourceService.Search(criteria)
+
+	if err != nil {
+		log.Error(err)
+		ctx.Status(http.StatusInternalServerError)
+		return err
+	}
+
+	ctx.JSON(resources)
+	ctx.Status(http.StatusOK)
+
 	return nil
 }
