@@ -1,6 +1,7 @@
 package services
 
 import (
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/n0o01lh/llp/internals/core/domain"
 	"github.com/n0o01lh/llp/internals/core/ports"
 )
@@ -64,4 +65,18 @@ func (service *ResourceService) Delete(id uint) error {
 	}
 
 	return nil
+}
+
+func (service *ResourceService) Search(criteria string) ([]*domain.Resource, error) {
+
+	resources, err := service.resourceRepository.Search(criteria)
+
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	log.Debug(&resources)
+
+	return resources, nil
 }
