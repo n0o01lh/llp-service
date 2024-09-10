@@ -160,3 +160,26 @@ func (h *ResourceHandlers) Search(ctx *fiber.Ctx) error {
 
 	return nil
 }
+
+func (h *ResourceHandlers) SalesHistory(ctx *fiber.Ctx) error {
+	id, err := ctx.ParamsInt("id")
+
+	if err != nil {
+		log.Error(err)
+		ctx.Status(http.StatusBadRequest)
+		return err
+	}
+
+	salesHistory, err := h.resourceService.SalesHistory(uint(id))
+
+	if err != nil {
+		log.Error(err)
+		ctx.Status(http.StatusInternalServerError)
+		return err
+	}
+
+	ctx.JSON(salesHistory)
+	ctx.Status(http.StatusOK)
+
+	return nil
+}
