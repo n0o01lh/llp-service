@@ -100,3 +100,16 @@ func (r *ResourceRepository) Search(criteria string) ([]*domain.Resource, error)
 
 	return resources, nil
 }
+
+func (r *ResourceRepository) SalesHistory(resourceId uint) ([]*domain.ResourceSalesHisotry, error) {
+
+	var salesHistory []*domain.ResourceSalesHisotry
+
+	result := r.Database.Table("sales_history").Where("resource_id = ?", resourceId).Find(&salesHistory)
+
+	if result.Error != nil {
+		return nil, errors.New("error performing search on database")
+	}
+
+	return salesHistory, nil
+}

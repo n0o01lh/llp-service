@@ -80,3 +80,15 @@ func (service *ResourceService) Search(criteria string) ([]*domain.Resource, err
 
 	return resources, nil
 }
+
+func (service *ResourceService) SalesHistory(resourceId uint) ([]*domain.ResourceSalesHisotry, error) {
+
+	salesHistory, err := service.resourceRepository.SalesHistory(resourceId)
+
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	return salesHistory, nil
+}

@@ -51,6 +51,7 @@ func (s *Server) Initialize() {
 	resourceRoutes.Get("/list", s.resourceHandlers.ListAll)
 	resourceRoutes.Get("/find", s.resourceHandlers.FindOne)
 	resourceRoutes.Get("/search", s.resourceHandlers.Search)
+	resourceRoutes.Get("/sales/:id", s.resourceHandlers.SalesHistory)
 	resourceRoutes.Patch("/update/:id", s.resourceHandlers.Update)
 	resourceRoutes.Delete("/delete/:id", s.resourceHandlers.Delete)
 
