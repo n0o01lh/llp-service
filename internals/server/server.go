@@ -60,6 +60,7 @@ func (s *Server) Initialize() {
 	courseRoutes.Post("/create", s.courseHandlers.Create)
 	courseRoutes.Get("/list", s.courseHandlers.ListAll)
 	courseRoutes.Get("/find", s.courseHandlers.FindOne)
+	courseRoutes.Get("/sales/:teacher_id", s.courseHandlers.SalesHistory)
 	courseRoutes.Patch("/update/:id", s.courseHandlers.Update)
 	courseRoutes.Delete("/delete/:id", s.courseHandlers.Delete)
 	//resource_course adding resource to course

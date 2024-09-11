@@ -3,8 +3,10 @@ package repositories
 import (
 	"errors"
 
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/n0o01lh/llp/internals/core/domain"
 	"github.com/n0o01lh/llp/internals/core/ports"
+	"github.com/n0o01lh/llp/internals/repositories/queries"
 	"gorm.io/gorm"
 )
 
@@ -86,4 +88,18 @@ func (r *CourseRepository) Delete(id uint) error {
 	}
 
 	return nil
+}
+
+func (r *CourseRepository) SalesHistory(teacherId uint) ([]*domain.CourseSalesHistory, error) {
+
+	var salesHistory []*domain.CourseSalesHistory
+
+	result := r.Database.Raw(queries.COURSE_SALES_HISTORY_QUERY, teacherId).Scan(&salesHistory)
+
+	if result.Error != nil {
+		log.Error(result.Error)
+		return nil, result.Error
+	}
+
+	return salesHistory, nil
 }
