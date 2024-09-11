@@ -5,6 +5,7 @@ import (
 
 	"github.com/n0o01lh/llp/internals/core/domain"
 	"github.com/n0o01lh/llp/internals/core/ports"
+	"github.com/n0o01lh/llp/internals/repositories/queries"
 	"gorm.io/gorm"
 )
 
@@ -105,7 +106,7 @@ func (r *ResourceRepository) SalesHistory(resourceId uint) ([]*domain.ResourceSa
 
 	var salesHistory []*domain.ResourceSalesHisotry
 
-	result := r.Database.Table("sales_history").Where("resource_id = ?", resourceId).Find(&salesHistory)
+	result := r.Database.Raw(queries.RESOURCE_SALES_HISTORY_QUERY, resourceId).Scan(&salesHistory)
 
 	if result.Error != nil {
 		return nil, errors.New("error performing search on database")
