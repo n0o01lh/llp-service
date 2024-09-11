@@ -137,3 +137,26 @@ func (h *CourseHandlers) Delete(ctx *fiber.Ctx) error {
 	ctx.SendStatus(http.StatusOK)
 	return nil
 }
+
+func (h *CourseHandlers) SalesHistory(ctx *fiber.Ctx) error {
+	id, err := ctx.ParamsInt("teacher_id")
+
+	if err != nil {
+		log.Error(err)
+		ctx.Status(http.StatusBadRequest)
+		return err
+	}
+
+	salesHistory, err := h.courseService.SalesHistory(uint(id))
+
+	if err != nil {
+		log.Error(err)
+		ctx.Status(http.StatusInternalServerError)
+		return err
+	}
+
+	ctx.JSON(salesHistory)
+	ctx.Status(http.StatusOK)
+
+	return nil
+}

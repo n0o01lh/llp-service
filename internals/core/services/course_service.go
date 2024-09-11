@@ -65,3 +65,14 @@ func (service *CourseService) Delete(id uint) error {
 
 	return nil
 }
+
+func (service *CourseService) SalesHistory(teacherId uint) ([]*domain.CourseSalesHistory, error) {
+
+	salesHistory, err := service.courseRepository.SalesHistory(teacherId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return salesHistory, nil
+}

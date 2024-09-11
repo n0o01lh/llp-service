@@ -11,6 +11,7 @@ type CourseService interface {
 	FindOne(id uint) (*domain.Course, error)
 	Update(id uint, course *domain.Course) (*domain.Course, error)
 	Delete(id uint) error
+	SalesHistory(teacherId uint) ([]*domain.CourseSalesHistory, error)
 }
 
 type CourseRepository interface {
@@ -19,6 +20,7 @@ type CourseRepository interface {
 	FindOne(id uint) (*domain.Course, error)
 	Update(id uint, course *domain.Course) (*domain.Course, error)
 	Delete(id uint) error
+	SalesHistory(teacherId uint) ([]*domain.CourseSalesHistory, error)
 }
 
 type CourseHandlers interface {
@@ -27,4 +29,5 @@ type CourseHandlers interface {
 	FindOne(context *fiber.Ctx) error
 	Update(context *fiber.Ctx) error
 	Delete(context *fiber.Ctx) error
+	SalesHistory(context *fiber.Ctx) error
 }
