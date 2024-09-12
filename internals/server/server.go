@@ -6,6 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/n0o01lh/llp/internals/core/ports"
 )
@@ -31,6 +32,13 @@ func (s *Server) Initialize() {
 	app := fiber.New()
 
 	//app.Use(logger.New())
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:     "http://127.0.0.1:5173",
+		AllowMethods:     "GET, POST, PUT, DELETE, OPTIONS",
+		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
+		AllowCredentials: true,
+	}))
 
 	file, err := os.OpenFile("llp-requests.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
