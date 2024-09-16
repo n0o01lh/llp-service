@@ -2,12 +2,12 @@ package domain
 
 type Resource struct {
 	Id          uint      `json:"id"`
-	Title       string    `json:"title"`
+	Title       string    `json:"title" validate:"required"`
 	Description string    `json:"description"`
-	Type        string    `json:"resource_type"`
+	Type        string    `json:"resource_type" validate:"required,oneof=video audio document"`
 	Url         string    `json:"url"`
-	Price       float64   `json:"price"`
-	Teacher_id  int       `json:"teacher_id"`
+	Price       float64   `json:"price" validate:"required,gt=0"`
+	Teacher_id  int       `json:"teacher_id" validate:"required"`
 	Duration    int       `json:"duration"`
 	Image       string    `json:"image"`
 	Courses     []*Course `gorm:"many2many:resources_courses;"`
