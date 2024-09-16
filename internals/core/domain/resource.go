@@ -8,10 +8,12 @@ type Resource struct {
 	Url         string    `json:"url"`
 	Price       float64   `json:"price"`
 	Teacher_id  int       `json:"teacher_id"`
+	Duration    int       `json:"duration"`
+	Image       string    `json:"image"`
 	Courses     []*Course `gorm:"many2many:resources_courses;"`
 }
 
-func NewResource(id uint, title string, description string, resource_type string, url string, price float64, teacher_id int) *Resource {
+func NewResource(id uint, title string, description string, resource_type string, url string, price float64, teacher_id int, duration int, image string) *Resource {
 
 	return &Resource{
 		Id:          id,
@@ -21,5 +23,7 @@ func NewResource(id uint, title string, description string, resource_type string
 		Url:         url,
 		Price:       price,
 		Teacher_id:  teacher_id,
+		Duration:    duration,
+		Image:       image,
 	}
 }

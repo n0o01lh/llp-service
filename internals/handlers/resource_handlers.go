@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -43,9 +42,8 @@ func (h *ResourceHandlers) Create(ctx *fiber.Ctx) error {
 
 	log.Info("Resource created", resource)
 
-	response, _ := json.Marshal(&resourceCreated)
-
-	ctx.SendString(string(response))
+	ctx.JSON(resourceCreated)
+	ctx.Status(http.StatusOK)
 
 	return nil
 }
@@ -59,9 +57,9 @@ func (h *ResourceHandlers) ListAll(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	response, _ := json.Marshal(resourceList)
+	ctx.JSON(resourceList)
+	ctx.Status(http.StatusOK)
 
-	ctx.Send(response)
 	return nil
 }
 
@@ -78,9 +76,8 @@ func (h *ResourceHandlers) FindOne(ctx *fiber.Ctx) error {
 
 	log.Info("Resource founded", resource)
 
-	response, _ := json.Marshal(resource)
-
-	ctx.Send(response)
+	ctx.JSON(resource)
+	ctx.Status(http.StatusOK)
 
 	return nil
 }
@@ -112,8 +109,8 @@ func (h *ResourceHandlers) Update(ctx *fiber.Ctx) error {
 
 	log.Info("Resource Updated", result)
 
-	response, _ := json.Marshal(result)
-	ctx.Send(response)
+	ctx.JSON(result)
+	ctx.Status(http.StatusOK)
 
 	return nil
 }
