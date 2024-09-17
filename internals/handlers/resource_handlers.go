@@ -3,11 +3,13 @@ package handlers
 import (
 	"errors"
 	"net/http"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/n0o01lh/llp/internals/core/domain"
 	"github.com/n0o01lh/llp/internals/core/ports"
+	"github.com/n0o01lh/llp/internals/utils"
 )
 
 type ResourceHandlers struct {
@@ -26,8 +28,20 @@ var _ ports.ResourceHandlers = (*ResourceHandlers)(nil)
 func (h *ResourceHandlers) Create(ctx *fiber.Ctx) error {
 
 	resource := new(domain.Resource)
+	err := ctx.BodyParser(&resource)
 
-	if err := ctx.BodyParser(&resource); err != nil {
+	validationErrors := utils.Validate(resource)
+
+	if len(validationErrors) > 0 {
+		errMsgs := utils.GetErrorsMessages(validationErrors)
+
+		return &fiber.Error{
+			Code:    fiber.ErrBadRequest.Code,
+			Message: strings.Join(errMsgs, " and "),
+		}
+	}
+
+	if err != nil {
 		log.Error(err)
 		ctx.SendStatus(400)
 		return err
