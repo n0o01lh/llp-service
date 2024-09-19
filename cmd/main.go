@@ -24,14 +24,7 @@ func main() {
 		envFile = ".env"
 	}
 
-	err := godotenv.Load()
-
-	if err != nil {
-		log.Error(err)
-		panic(err)
-	}
-
-	err = godotenv.Load(envFile)
+	err := godotenv.Load(envFile)
 
 	if err != nil {
 		log.Error(err)
