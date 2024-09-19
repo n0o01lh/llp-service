@@ -1,26 +1,40 @@
 package services
 
 import (
+	"context"
+
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/n0o01lh/llp/internals/core/domain"
 	"github.com/n0o01lh/llp/internals/core/ports"
+	"github.com/n0o01lh/llp/internals/utils"
 )
 
 type ResourceService struct {
 	resourceRepository ports.ResourceRepository
+	ctx                context.Context
 }
 
 var _ ports.ResourceService = (*ResourceService)(nil)
 
-func NewResourceService(repository ports.ResourceRepository) *ResourceService {
+func NewResourceService(ctx context.Context, repository ports.ResourceRepository) *ResourceService {
 	return &ResourceService{
 		resourceRepository: repository,
+		ctx:                ctx,
 	}
 }
 
 func (service *ResourceService) Create(resource *domain.Resource) (*domain.Resource, error) {
-	resourceCreated, err := service.resourceRepository.Create(resource)
 
+	//upload image to cloudinary
+	cloudinary := utils.GetCloudinaryInstance(service.ctx)
+	imageUrl, err := utils.UploadImage(cloudinary, service.ctx, resource.Image)
+
+	if err != nil {
+		return nil, err
+	}
+
+	resource.Image = imageUrl
+	resourceCreated, err := service.resourceRepository.Create(resource)
 	if err != nil {
 		return nil, err
 	}

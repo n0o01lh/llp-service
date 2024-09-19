@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"os"
 	"strconv"
 
@@ -15,6 +16,7 @@ import (
 
 func main() {
 
+	ctx := context.Background()
 	var envFile string
 	if len(os.Args) > 1 {
 		envFile = os.Args[1]
@@ -22,7 +24,14 @@ func main() {
 		envFile = ".env"
 	}
 
-	err := godotenv.Load(envFile)
+	err := godotenv.Load()
+
+	if err != nil {
+		log.Error(err)
+		panic(err)
+	}
+
+	err = godotenv.Load(envFile)
 
 	if err != nil {
 		log.Error(err)
@@ -39,7 +48,7 @@ func main() {
 	db_configuration.Connect(dbHost, dbUser, dbPassword, port)
 
 	resourceRepository := repositories.NewResourceRepository(db_configuration.Database)
-	resourceService := services.NewResourceService(resourceRepository)
+	resourceService := services.NewResourceService(ctx, resourceRepository)
 	resourceHandlers := handlers.NewResourceHandlers(resourceService)
 
 	courseRepository := repositories.NewCourseRepository(db_configuration.Database)

@@ -31,8 +31,6 @@ func (s *Server) Initialize() {
 
 	app := fiber.New()
 
-	//app.Use(logger.New())
-
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     "http://127.0.0.1:5173",
 		AllowMethods:     "GET, POST, PUT, DELETE, OPTIONS",
