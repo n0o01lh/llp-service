@@ -14,16 +14,27 @@ type Cloudinary struct {
 
 var cld *cloudinary.Cloudinary
 
-func GetCloudinaryInstance() *cloudinary.Cloudinary {
-	var err error
+func GetCloudinaryInstance(ctx context.Context) *cloudinary.Cloudinary {
+
 	if cld == nil {
-		cld, err = cloudinary.NewFromParams("deiz84fxy", "596158677423497", "boDgQ86Sdlhe4umhy7HizwBgmZw")
+		vaultClient := VaultConnection()
+		cloudinary_credentials, err := vaultClient.KVv2("secret").Get(ctx, "cloudinary_credentials")
+
+		if err != nil {
+			log.Error("unable to read secret: %v", err)
+		}
+
+		cld, err = cloudinary.NewFromParams(
+			cloudinary_credentials.Data["cloud"].(string),
+			cloudinary_credentials.Data["key"].(string),
+			cloudinary_credentials.Data["secret"].(string))
+
 		if err != nil {
 			log.Error(err)
 		}
 	}
-	return cld
 
+	return cld
 }
 
 func UploadImage(cld *cloudinary.Cloudinary, ctx context.Context, image string) (string, error) {

@@ -26,7 +26,7 @@ func NewResourceService(ctx context.Context, repository ports.ResourceRepository
 func (service *ResourceService) Create(resource *domain.Resource) (*domain.Resource, error) {
 
 	//upload image to cloudinary
-	cloudinary := utils.GetCloudinaryInstance()
+	cloudinary := utils.GetCloudinaryInstance(service.ctx)
 	imageUrl, err := utils.UploadImage(cloudinary, service.ctx, resource.Image)
 
 	if err != nil {
