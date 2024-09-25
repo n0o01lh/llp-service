@@ -55,6 +55,7 @@ func (s *Server) Initialize() {
 
 	resourceRoutes.Post("/create", s.resourceHandlers.Create)
 	resourceRoutes.Get("/list", s.resourceHandlers.ListAll)
+	resourceRoutes.Get("/list-by-teacher", s.resourceHandlers.ListAllByTeacherId)
 	resourceRoutes.Get("/find", s.resourceHandlers.FindOne)
 	resourceRoutes.Get("/search", s.resourceHandlers.Search)
 	resourceRoutes.Get("/sales/:id", s.resourceHandlers.SalesHistory)

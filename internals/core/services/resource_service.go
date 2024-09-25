@@ -51,6 +51,16 @@ func (service *ResourceService) ListAll() ([]*domain.Resource, error) {
 	return resourceList, nil
 }
 
+func (service *ResourceService) ListAllByTeacherId(teacherId uint) ([]*domain.Resource, error) {
+	resourceList, err := service.resourceRepository.ListAllByTeacherId(teacherId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return resourceList, nil
+}
+
 func (service *ResourceService) FindOne(id uint) (*domain.Resource, error) {
 	resource, err := service.resourceRepository.FindOne(id)
 

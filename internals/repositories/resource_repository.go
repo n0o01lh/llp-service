@@ -48,6 +48,19 @@ func (r *ResourceRepository) ListAll() ([]*domain.Resource, error) {
 	return resourceList, nil
 }
 
+func (r *ResourceRepository) ListAllByTeacherId(teacherId uint) ([]*domain.Resource, error) {
+
+	var resourceList []*domain.Resource
+
+	r.Database.Preload("Courses").Where("teacher_id = ?", teacherId).Find(&resourceList)
+
+	if resourceList == nil {
+		return nil, errors.New("resources not found")
+	}
+
+	return resourceList, nil
+}
+
 func (r *ResourceRepository) FindOne(id uint) (*domain.Resource, error) {
 
 	var resource *domain.Resource
