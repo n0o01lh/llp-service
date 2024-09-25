@@ -8,6 +8,7 @@ import (
 type ResourceService interface {
 	Create(resource *domain.Resource) (*domain.Resource, error)
 	ListAll() ([]*domain.Resource, error)
+	ListAllByTeacherId(teacherId uint) ([]*domain.Resource, error)
 	FindOne(id uint) (*domain.Resource, error)
 	Update(id uint, resource *domain.Resource) (*domain.Resource, error)
 	Delete(id uint) error
@@ -18,6 +19,7 @@ type ResourceService interface {
 type ResourceRepository interface {
 	Create(resource *domain.Resource) (*domain.Resource, error)
 	ListAll() ([]*domain.Resource, error)
+	ListAllByTeacherId(teacherId uint) ([]*domain.Resource, error)
 	FindOne(id uint) (*domain.Resource, error)
 	Update(id uint, resource *domain.Resource) (*domain.Resource, error)
 	Delete(id uint) error
@@ -28,6 +30,7 @@ type ResourceRepository interface {
 type ResourceHandlers interface {
 	Create(context *fiber.Ctx) error
 	ListAll(context *fiber.Ctx) error
+	ListAllByTeacherId(context *fiber.Ctx) error
 	FindOne(context *fiber.Ctx) error
 	Update(context *fiber.Ctx) error
 	Delete(context *fiber.Ctx) error

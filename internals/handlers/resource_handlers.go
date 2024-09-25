@@ -77,6 +77,23 @@ func (h *ResourceHandlers) ListAll(ctx *fiber.Ctx) error {
 	return nil
 }
 
+func (h *ResourceHandlers) ListAllByTeacherId(ctx *fiber.Ctx) error {
+	teacherId := ctx.QueryInt("id")
+
+	resourceList, err := h.resourceService.ListAllByTeacherId(uint(teacherId))
+
+	if err != nil {
+		log.Error(err)
+		ctx.SendStatus(http.StatusInternalServerError)
+		return err
+	}
+
+	ctx.JSON(resourceList)
+	ctx.Status(http.StatusOK)
+
+	return nil
+}
+
 func (h *ResourceHandlers) FindOne(ctx *fiber.Ctx) error {
 	id := ctx.QueryInt("id")
 
