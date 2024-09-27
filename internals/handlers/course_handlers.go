@@ -3,11 +3,13 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/n0o01lh/llp/internals/core/domain"
 	"github.com/n0o01lh/llp/internals/core/ports"
+	"github.com/n0o01lh/llp/internals/utils"
 )
 
 type CourseHandlers struct {
@@ -25,8 +27,20 @@ var _ ports.CourseHandlers = (*CourseHandlers)(nil)
 func (h *CourseHandlers) Create(ctx *fiber.Ctx) error {
 
 	course := new(domain.Course)
+	err := ctx.BodyParser(&course)
 
-	if err := ctx.BodyParser(&course); err != nil {
+	validationErrors := utils.Validate(course)
+
+	if len(validationErrors) > 0 {
+		errMsgs := utils.GetErrorsMessages(validationErrors)
+
+		return &fiber.Error{
+			Code:    fiber.ErrBadRequest.Code,
+			Message: strings.Join(errMsgs, " and "),
+		}
+	}
+
+	if err != nil {
 		log.Error(err)
 		ctx.SendStatus(400)
 		return err
