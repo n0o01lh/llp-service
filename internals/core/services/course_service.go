@@ -36,6 +36,16 @@ func (service *CourseService) ListAll() ([]*domain.Course, error) {
 	return courseList, nil
 }
 
+func (service *CourseService) ListAllByTeacherId(teacherId uint) ([]*domain.Course, error) {
+	courseList, err := service.courseRepository.ListAllByTeacherId(teacherId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return courseList, nil
+}
+
 func (service *CourseService) FindOne(id uint) (*domain.Course, error) {
 	course, err := service.courseRepository.FindOne(id)
 
