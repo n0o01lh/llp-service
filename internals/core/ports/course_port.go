@@ -8,6 +8,7 @@ import (
 type CourseService interface {
 	Create(course *domain.Course) (*domain.Course, error)
 	ListAll() ([]*domain.Course, error)
+	ListAllByTeacherId(teacherId uint) ([]*domain.Course, error)
 	FindOne(id uint) (*domain.Course, error)
 	Update(id uint, course *domain.Course) (*domain.Course, error)
 	Delete(id uint) error
@@ -17,6 +18,7 @@ type CourseService interface {
 type CourseRepository interface {
 	Create(course *domain.Course) (*domain.Course, error)
 	ListAll() ([]*domain.Course, error)
+	ListAllByTeacherId(teacherId uint) ([]*domain.Course, error)
 	FindOne(id uint) (*domain.Course, error)
 	Update(id uint, course *domain.Course) (*domain.Course, error)
 	Delete(id uint) error
@@ -26,6 +28,7 @@ type CourseRepository interface {
 type CourseHandlers interface {
 	Create(context *fiber.Ctx) error
 	ListAll(context *fiber.Ctx) error
+	ListAllByTeacherId(context *fiber.Ctx) error
 	FindOne(context *fiber.Ctx) error
 	Update(context *fiber.Ctx) error
 	Delete(context *fiber.Ctx) error
