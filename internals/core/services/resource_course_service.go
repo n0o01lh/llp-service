@@ -82,7 +82,24 @@ func (s *ResourceCourseService) AsignCourseToResources(resources []any, courseId
 
 func (s *ResourceCourseService) RemoveResourceFromCourse(resourceId, courseId uint) error {
 
-	error := s.resourceCourseRepository.RemoveResourceFromCourse(resourceId, courseId)
+	course, error := s.courseRepository.FindOne(courseId)
+
+	if error != nil {
+		return error
+	}
+
+	isResourceInCourse := false
+
+	for _, value := range course.Resources {
+		if value.Id == resourceId {
+			isResourceInCourse = true
+			break
+		}
+	}
+
+	if isResourceInCourse {
+		error = s.resourceCourseRepository.RemoveResourceFromCourse(resourceId, courseId)
+	}
 
 	if error != nil {
 		return error
