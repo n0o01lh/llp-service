@@ -94,6 +94,8 @@ func (r *CourseRepository) Delete(id uint) error {
 
 	var course *domain.Course
 
+	r.Database.Table("resources_courses").Where("course_id=?", id).Delete(id)
+
 	result := r.Database.Delete(&course, id)
 
 	if result.RowsAffected == 0 {
