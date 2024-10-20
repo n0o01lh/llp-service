@@ -123,8 +123,9 @@ func (h *ResourceHandlers) Update(ctx *fiber.Ctx) error {
 		ctx.SendStatus(http.StatusInternalServerError)
 		return err
 	}
+	err = ctx.BodyParser(&resource)
 
-	if err := ctx.BodyParser(&resource); err != nil {
+	if err != nil {
 		log.Error(err)
 		ctx.SendStatus(http.StatusBadRequest)
 		return err
