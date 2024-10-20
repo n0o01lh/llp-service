@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"strings"
 
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/n0o01lh/llp/internals/core/domain"
@@ -72,6 +73,33 @@ func (service *ResourceService) FindOne(id uint) (*domain.Resource, error) {
 }
 
 func (service *ResourceService) Update(id uint, resource *domain.Resource) (*domain.Resource, error) {
+
+	currentResource, _ := service.resourceRepository.FindOne(id)
+
+	//check if is neccessary to update image
+	if !strings.Contains(resource.Image, "res.cloudinary.com") {
+		cloudinary := utils.GetCloudinaryInstance(service.ctx)
+		//remove previous image
+		pngImage := strings.Split(currentResource.Image, "/")[7]
+		publicId := strings.Split(pngImage, ".")[0]
+
+		err := utils.RemoveImage(cloudinary, service.ctx, publicId)
+
+		if err != nil {
+			log.Error("Unable to remove cdn image")
+			return nil, err
+		}
+
+		//upload image to cloudinary
+		imageUrl, err := utils.UploadImage(cloudinary, service.ctx, resource.Image)
+
+		if err != nil {
+			return nil, err
+		}
+
+		resource.Image = imageUrl
+	}
+
 	resourceUpdated, err := service.resourceRepository.Update(id, resource)
 
 	if err != nil {

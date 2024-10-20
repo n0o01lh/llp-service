@@ -78,7 +78,17 @@ func (r *ResourceRepository) Update(id uint, resource *domain.Resource) (*domain
 
 	var updatedResource *domain.Resource
 
-	r.Database.Where("id = ?", id).Updates(&resource)
+	updatedResourceMap := make(map[string]interface{})
+
+	updatedResourceMap["title"] = resource.Title
+	updatedResourceMap["description"] = resource.Description
+	updatedResourceMap["type"] = resource.Type
+	updatedResourceMap["url"] = resource.Url
+	updatedResourceMap["price"] = resource.Price
+	updatedResourceMap["duration"] = resource.Duration
+	updatedResourceMap["image"] = resource.Image
+
+	r.Database.Table("resources").Where("id = ?", id).Updates(&updatedResourceMap)
 
 	r.Database.Find(&updatedResource, id)
 

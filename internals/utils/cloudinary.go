@@ -48,3 +48,15 @@ func UploadImage(cld *cloudinary.Cloudinary, ctx context.Context, image string) 
 
 	return resp.URL, nil
 }
+
+func RemoveImage(cld *cloudinary.Cloudinary, ctx context.Context, publicId string) error {
+	_, err := cld.Upload.Destroy(ctx, uploader.DestroyParams{
+		PublicID: publicId,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
