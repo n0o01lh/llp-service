@@ -75,10 +75,11 @@ func (service *ResourceService) FindOne(id uint) (*domain.Resource, error) {
 func (service *ResourceService) Update(id uint, resource *domain.Resource) (*domain.Resource, error) {
 
 	currentResource, _ := service.resourceRepository.FindOne(id)
+	cloudinary := utils.GetCloudinaryInstance(service.ctx)
 
 	//check if is neccessary to update image
-	if !strings.Contains(resource.Image, "res.cloudinary.com") {
-		cloudinary := utils.GetCloudinaryInstance(service.ctx)
+	if strings.Contains(currentResource.Image, "res.cloudinary.com") &&
+		strings.Contains(resource.Image, "base64") {
 		//remove previous image
 		pngImage := strings.Split(currentResource.Image, "/")[7]
 		publicId := strings.Split(pngImage, ".")[0]
@@ -89,14 +90,15 @@ func (service *ResourceService) Update(id uint, resource *domain.Resource) (*dom
 			log.Error("Unable to remove cdn image")
 			return nil, err
 		}
+	}
 
+	if strings.Contains(resource.Image, "base64") {
 		//upload image to cloudinary
 		imageUrl, err := utils.UploadImage(cloudinary, service.ctx, resource.Image)
 
 		if err != nil {
 			return nil, err
 		}
-
 		resource.Image = imageUrl
 	}
 
