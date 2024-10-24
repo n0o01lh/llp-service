@@ -137,3 +137,16 @@ func (r *ResourceRepository) SalesHistory(resourceId uint) ([]*domain.ResourceSa
 
 	return salesHistory, nil
 }
+
+func (r *ResourceRepository) SalesHistoryByTeacher(teacherId uint) ([]*domain.ResourceSalesHisotry, error) {
+
+	var salesHistory []*domain.ResourceSalesHisotry
+
+	result := r.Database.Raw(queries.RESOURCE_SALES_HISTORY_BY_TEACHER_QUERY, teacherId).Scan(&salesHistory)
+
+	if result.Error != nil {
+		return nil, errors.New("error performing search on database")
+	}
+
+	return salesHistory, nil
+}

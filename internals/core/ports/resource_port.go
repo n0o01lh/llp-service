@@ -14,6 +14,7 @@ type ResourceService interface {
 	Delete(id uint) error
 	Search(criteria string) ([]*domain.Resource, error)
 	SalesHistory(resourceId uint) ([]*domain.ResourceSalesHisotry, error)
+	SalesHistoryByTeacher(teacherId uint) ([]*domain.ResourceSalesHisotry, error)
 }
 
 type ResourceRepository interface {
@@ -25,6 +26,7 @@ type ResourceRepository interface {
 	Delete(id uint) error
 	Search(criteria string) ([]*domain.Resource, error)
 	SalesHistory(resourceId uint) ([]*domain.ResourceSalesHisotry, error)
+	SalesHistoryByTeacher(teacherId uint) ([]*domain.ResourceSalesHisotry, error)
 }
 
 type ResourceHandlers interface {
@@ -36,4 +38,5 @@ type ResourceHandlers interface {
 	Delete(context *fiber.Ctx) error
 	Search(context *fiber.Ctx) error
 	SalesHistory(context *fiber.Ctx) error
+	SalesHistoryByTeacher(context *fiber.Ctx) error
 }
