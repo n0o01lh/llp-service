@@ -212,3 +212,26 @@ func (h *ResourceHandlers) SalesHistory(ctx *fiber.Ctx) error {
 
 	return nil
 }
+
+func (h *ResourceHandlers) SalesHistoryByTeacher(ctx *fiber.Ctx) error {
+	id, err := ctx.ParamsInt("id")
+
+	if err != nil {
+		log.Error(err)
+		ctx.Status(http.StatusBadRequest)
+		return err
+	}
+
+	salesHistory, err := h.resourceService.SalesHistoryByTeacher(uint(id))
+
+	if err != nil {
+		log.Error(err)
+		ctx.Status(http.StatusInternalServerError)
+		return err
+	}
+
+	ctx.JSON(salesHistory)
+	ctx.Status(http.StatusOK)
+
+	return nil
+}

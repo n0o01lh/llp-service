@@ -146,3 +146,15 @@ func (service *ResourceService) SalesHistory(resourceId uint) ([]*domain.Resourc
 
 	return salesHistory, nil
 }
+
+func (service *ResourceService) SalesHistoryByTeacher(teacherId uint) ([]*domain.ResourceSalesHisotry, error) {
+
+	salesHistory, err := service.resourceRepository.SalesHistoryByTeacher(teacherId)
+
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	return salesHistory, nil
+}
