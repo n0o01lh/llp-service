@@ -3,6 +3,7 @@ package repositories
 import (
 	"errors"
 
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/n0o01lh/llp/internals/core/domain"
 	"github.com/n0o01lh/llp/internals/core/ports"
 	"github.com/n0o01lh/llp/internals/repositories/queries"
@@ -68,6 +69,7 @@ func (r *ResourceRepository) FindOne(id uint) (*domain.Resource, error) {
 	row := r.Database.Preload("Courses").Find(&resource, id)
 
 	if row.RowsAffected == 0 {
+		log.Error(row.Error.Error())
 		return nil, errors.New("resource not found")
 	}
 
