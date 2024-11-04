@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"strings"
+	"time"
 
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/n0o01lh/llp/internals/core/domain"
@@ -36,6 +37,11 @@ func (service *ResourceService) Create(resource *domain.Resource) (*domain.Resou
 
 	resource.Image = imageUrl
 	resource.PublicId = publicId
+
+	//dates
+	resource.CreatedAt = time.Now().UTC()
+	resource.UpdatedAt = time.Now().UTC()
+
 	resourceCreated, err := service.resourceRepository.Create(resource)
 	if err != nil {
 		return nil, err
@@ -100,6 +106,9 @@ func (service *ResourceService) Update(id uint, resource *domain.Resource) (*dom
 		resource.Image = imageUrl
 		resource.PublicId = publicId
 	}
+
+	//date
+	resource.UpdatedAt = time.Now().UTC()
 
 	resourceUpdated, err := service.resourceRepository.Update(id, resource)
 

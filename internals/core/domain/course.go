@@ -1,7 +1,11 @@
 package domain
 
+import "time"
+
 type Course struct {
 	Id          uint        `json:"id" gorm:"primaryKey;size:256"`
+	CreatedAt   time.Time   `json:"created_at"`
+	UpdatedAt   time.Time   `json:"updated_at"`
 	Title       string      `json:"title" validate:"required"`
 	Description string      `json:"description" validate:"required"`
 	Price       float64     `json:"price"`
