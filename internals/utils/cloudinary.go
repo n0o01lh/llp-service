@@ -37,16 +37,16 @@ func GetCloudinaryInstance(ctx context.Context) *cloudinary.Cloudinary {
 	return cld
 }
 
-func UploadImage(cld *cloudinary.Cloudinary, ctx context.Context, image string) (string, error) {
+func UploadImage(cld *cloudinary.Cloudinary, ctx context.Context, image string) (string, string, error) {
 
 	resp, err := cld.Upload.Upload(ctx, image, uploader.UploadParams{
 		UniqueFilename: api.Bool(false),
 		Overwrite:      api.Bool(true)})
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
-	return resp.URL, nil
+	return resp.URL, resp.PublicID, nil
 }
 
 func RemoveImage(cld *cloudinary.Cloudinary, ctx context.Context, publicId string) error {

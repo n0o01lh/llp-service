@@ -28,13 +28,14 @@ func (service *ResourceService) Create(resource *domain.Resource) (*domain.Resou
 
 	//upload image to cloudinary
 	cloudinary := utils.GetCloudinaryInstance(service.ctx)
-	imageUrl, err := utils.UploadImage(cloudinary, service.ctx, resource.Image)
+	imageUrl, publicId, err := utils.UploadImage(cloudinary, service.ctx, resource.Image)
 
 	if err != nil {
 		return nil, err
 	}
 
 	resource.Image = imageUrl
+	resource.PublicId = publicId
 	resourceCreated, err := service.resourceRepository.Create(resource)
 	if err != nil {
 		return nil, err
@@ -81,10 +82,7 @@ func (service *ResourceService) Update(id uint, resource *domain.Resource) (*dom
 	if strings.Contains(currentResource.Image, "res.cloudinary.com") &&
 		strings.Contains(resource.Image, "base64") {
 		//remove previous image
-		pngImage := strings.Split(currentResource.Image, "/")[7]
-		publicId := strings.Split(pngImage, ".")[0]
-
-		err := utils.RemoveImage(cloudinary, service.ctx, publicId)
+		err := utils.RemoveImage(cloudinary, service.ctx, currentResource.PublicId)
 
 		if err != nil {
 			log.Error("Unable to remove cdn image")
@@ -94,12 +92,13 @@ func (service *ResourceService) Update(id uint, resource *domain.Resource) (*dom
 
 	if strings.Contains(resource.Image, "base64") {
 		//upload image to cloudinary
-		imageUrl, err := utils.UploadImage(cloudinary, service.ctx, resource.Image)
+		imageUrl, publicId, err := utils.UploadImage(cloudinary, service.ctx, resource.Image)
 
 		if err != nil {
 			return nil, err
 		}
 		resource.Image = imageUrl
+		resource.PublicId = publicId
 	}
 
 	resourceUpdated, err := service.resourceRepository.Update(id, resource)
@@ -112,10 +111,23 @@ func (service *ResourceService) Update(id uint, resource *domain.Resource) (*dom
 }
 
 func (service *ResourceService) Delete(id uint) error {
-	err := service.resourceRepository.Delete(id)
+	cloudinary := utils.GetCloudinaryInstance(service.ctx)
+	currentResource, err := service.resourceRepository.FindOne(id)
 
 	if err != nil {
 		return err
+	}
+
+	err = service.resourceRepository.Delete(id)
+
+	if err != nil {
+		return err
+	}
+
+	err = utils.RemoveImage(cloudinary, service.ctx, currentResource.PublicId)
+
+	if err != nil {
+		log.Error("Unable to remove user image from cdn")
 	}
 
 	return nil
