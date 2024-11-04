@@ -53,7 +53,7 @@ func (r *CourseRepository) ListAllByTeacherId(teacherId uint) ([]*domain.Course,
 
 	var courseList []*domain.Course
 
-	r.Database.Preload("Resources").Where("teacher_id = ?", teacherId).Find(&courseList)
+	r.Database.Preload("Resources").Where("teacher_id = ?", teacherId).Order("created_at DESC").Find(&courseList)
 
 	if courseList == nil {
 		return nil, errors.New("courses not found")

@@ -53,7 +53,7 @@ func (r *ResourceRepository) ListAllByTeacherId(teacherId uint) ([]*domain.Resou
 
 	var resourceList []*domain.Resource
 
-	r.Database.Preload("Courses").Where("teacher_id = ?", teacherId).Find(&resourceList)
+	r.Database.Preload("Courses").Where("teacher_id = ?", teacherId).Order("created_at DESC").Find(&resourceList)
 
 	if resourceList == nil {
 		return nil, errors.New("resources not found")
@@ -90,6 +90,7 @@ func (r *ResourceRepository) Update(id uint, resource *domain.Resource) (*domain
 	updatedResourceMap["duration"] = resource.Duration
 	updatedResourceMap["image"] = resource.Image
 	updatedResourceMap["public_id"] = resource.PublicId
+	updatedResourceMap["updated_at"] = resource.UpdatedAt
 
 	r.Database.Table("resources").Where("id = ?", id).Updates(&updatedResourceMap)
 

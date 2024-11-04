@@ -1,6 +1,8 @@
 package services
 
 import (
+	"time"
+
 	"github.com/n0o01lh/llp/internals/core/domain"
 	"github.com/n0o01lh/llp/internals/core/ports"
 )
@@ -18,6 +20,10 @@ func NewCourseService(courseRepo ports.CourseRepository) *CourseService {
 var _ ports.CourseService = (*CourseService)(nil)
 
 func (service *CourseService) Create(course *domain.Course) (*domain.Course, error) {
+	//times
+	course.CreatedAt = time.Now().UTC()
+	course.UpdatedAt = time.Now().UTC()
+
 	courseCreated, err := service.courseRepository.Create(course)
 
 	if err != nil {
@@ -57,6 +63,9 @@ func (service *CourseService) FindOne(id uint) (*domain.Course, error) {
 }
 
 func (service *CourseService) Update(id uint, course *domain.Course) (*domain.Course, error) {
+	//date
+	course.UpdatedAt = time.Now().UTC()
+
 	courseUpdated, err := service.courseRepository.Update(id, course)
 
 	if err != nil {

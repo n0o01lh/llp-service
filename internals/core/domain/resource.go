@@ -1,7 +1,11 @@
 package domain
 
+import "time"
+
 type Resource struct {
 	Id          uint      `json:"id" gorm:"primaryKey;size:256"`
+	CreatedAt   time.Time `json:"createdAt"`
+	UpdatedAt   time.Time `json:"updatedAt"`
 	Title       string    `json:"title" validate:"required"`
 	Description string    `json:"description"`
 	Type        string    `json:"resource_type" validate:"required,oneof=video audio document"`
@@ -14,7 +18,7 @@ type Resource struct {
 	Courses     []*Course `gorm:"many2many:resources_courses;constraint:OnDelete:CASCADE"`
 }
 
-func NewResource(id uint, title string, description string, resource_type string, url string, price float64, teacher_id int, duration int, image string) *Resource {
+func NewResource(id uint, title string, description string, resource_type string, url string, price float64, teacher_id int, duration int, image string, publicId string) *Resource {
 
 	return &Resource{
 		Id:          id,
@@ -26,5 +30,6 @@ func NewResource(id uint, title string, description string, resource_type string
 		Teacher_id:  teacher_id,
 		Duration:    duration,
 		Image:       image,
+		PublicId:    publicId,
 	}
 }
