@@ -10,6 +10,7 @@ type Resource struct {
 	Teacher_id  int       `json:"teacher_id" validate:"required"`
 	Duration    int       `json:"duration"`
 	Image       string    `json:"image"`
+	PublicId    string    `json:"public_id"`
 	Courses     []*Course `gorm:"many2many:resources_courses;constraint:OnDelete:CASCADE"`
 }
 

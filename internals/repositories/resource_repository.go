@@ -89,6 +89,7 @@ func (r *ResourceRepository) Update(id uint, resource *domain.Resource) (*domain
 	updatedResourceMap["price"] = resource.Price
 	updatedResourceMap["duration"] = resource.Duration
 	updatedResourceMap["image"] = resource.Image
+	updatedResourceMap["public_id"] = resource.PublicId
 
 	r.Database.Table("resources").Where("id = ?", id).Updates(&updatedResourceMap)
 
