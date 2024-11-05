@@ -179,3 +179,21 @@ func (service *ResourceService) SalesHistoryByTeacher(teacherId uint) ([]*domain
 
 	return salesHistory, nil
 }
+
+func (service *ResourceService) SalesCountHistoryByTeacher(teacherId uint, limit int) ([]*domain.ResourcePopularHistory, error) {
+
+	resultLimit := 5
+
+	if limit > 0 {
+		resultLimit = limit
+	}
+
+	popularHistory, err := service.resourceRepository.SalesCountHistoryByTeacher(teacherId, resultLimit)
+
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	return popularHistory, nil
+}
