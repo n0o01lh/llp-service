@@ -235,3 +235,29 @@ func (h *ResourceHandlers) SalesHistoryByTeacher(ctx *fiber.Ctx) error {
 
 	return nil
 }
+
+func (h *ResourceHandlers) SalesCountHistoryByTeacher(ctx *fiber.Ctx) error {
+
+	id, err := ctx.ParamsInt("id")
+
+	if err != nil {
+		log.Error(err)
+		ctx.Status(http.StatusBadRequest)
+		return err
+	}
+
+	limit := ctx.QueryInt("limit", 0)
+
+	salesCountHistory, err := h.resourceService.SalesCountHistoryByTeacher(uint(id), limit)
+
+	if err != nil {
+		log.Error(err)
+		ctx.Status(http.StatusInternalServerError)
+		return err
+	}
+
+	ctx.JSON(salesCountHistory)
+	ctx.Status(http.StatusOK)
+
+	return nil
+}

@@ -15,6 +15,7 @@ type ResourceService interface {
 	Search(criteria string) ([]*domain.Resource, error)
 	SalesHistory(resourceId uint) ([]*domain.ResourceSalesHisotry, error)
 	SalesHistoryByTeacher(teacherId uint) ([]*domain.ResourceSalesHisotry, error)
+	SalesCountHistoryByTeacher(teacherId uint, limit int) ([]*domain.ResourcePopularHistory, error)
 }
 
 type ResourceRepository interface {
@@ -27,6 +28,7 @@ type ResourceRepository interface {
 	Search(criteria string) ([]*domain.Resource, error)
 	SalesHistory(resourceId uint) ([]*domain.ResourceSalesHisotry, error)
 	SalesHistoryByTeacher(teacherId uint) ([]*domain.ResourceSalesHisotry, error)
+	SalesCountHistoryByTeacher(teacherId uint, limit int) ([]*domain.ResourcePopularHistory, error)
 }
 
 type ResourceHandlers interface {
@@ -39,4 +41,5 @@ type ResourceHandlers interface {
 	Search(context *fiber.Ctx) error
 	SalesHistory(context *fiber.Ctx) error
 	SalesHistoryByTeacher(context *fiber.Ctx) error
+	SalesCountHistoryByTeacher(context *fiber.Ctx) error
 }

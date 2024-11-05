@@ -154,3 +154,16 @@ func (r *ResourceRepository) SalesHistoryByTeacher(teacherId uint) ([]*domain.Re
 
 	return salesHistory, nil
 }
+
+func (r *ResourceRepository) SalesCountHistoryByTeacher(teacherId uint, limit int) ([]*domain.ResourcePopularHistory, error) {
+
+	var popularSalesHistory []*domain.ResourcePopularHistory
+
+	result := r.Database.Raw(queries.RESOURCE_SALES_HISTORY_MOST_POPULAR_QUERY, teacherId, limit).Scan(&popularSalesHistory)
+
+	if result.Error != nil {
+		return nil, errors.New("error performing search on database")
+	}
+
+	return popularSalesHistory, nil
+}
