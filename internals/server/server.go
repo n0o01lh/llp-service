@@ -15,15 +15,17 @@ type Server struct {
 	resourceHandlers       ports.ResourceHandlers
 	courseHandlers         ports.CourseHandlers
 	resourceCourseHandlers ports.ResourceCourseHandlers
+	userHandlers           ports.UserHandlers
 	//middlewares here
 	//every hanlders will be here
 }
 
-func NewServer(rHandlers ports.ResourceHandlers, cHandlers ports.CourseHandlers, rcHandlers ports.ResourceCourseHandlers) *Server {
+func NewServer(rHandlers ports.ResourceHandlers, cHandlers ports.CourseHandlers, rcHandlers ports.ResourceCourseHandlers, uHandlers ports.UserHandlers) *Server {
 	return &Server{
 		resourceHandlers:       rHandlers,
 		courseHandlers:         cHandlers,
 		resourceCourseHandlers: rcHandlers,
+		userHandlers:           uHandlers,
 	}
 }
 
@@ -77,6 +79,11 @@ func (s *Server) Initialize() {
 	courseRoutes.Post("/add-one-resource", s.resourceCourseHandlers.AddResourceToCourse)
 	courseRoutes.Post("/add-resources", s.resourceCourseHandlers.AsignCourseToResources)
 	courseRoutes.Delete("/remove-resource", s.resourceCourseHandlers.RemoveResourceFromCourse)
+
+	userRoutes := app.Group("/user")
+
+	userRoutes.Post("/register", s.userHandlers.Register)
+	userRoutes.Post("/login", s.userHandlers.Login)
 
 	app.Listen(":3000")
 
