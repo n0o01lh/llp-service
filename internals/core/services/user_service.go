@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/n0o01lh/llp/internals/core/domain"
 	"github.com/n0o01lh/llp/internals/core/ports"
+	"github.com/n0o01lh/llp/internals/shared/constants"
 	"github.com/n0o01lh/llp/internals/utils"
 )
 
@@ -19,12 +20,6 @@ func NewUserService(userRepository ports.UserRepository) *UserService {
 	}
 }
 
-const (
-	ROLE_ADMIN   = 1
-	ROLE_USER    = 2
-	ROLE_TEACHER = 3
-)
-
 var _ ports.UserService = (*UserService)(nil)
 
 func (s *UserService) Register(user *domain.RegisterRequest) (*domain.RegisterResponse, error) {
@@ -37,7 +32,7 @@ func (s *UserService) Register(user *domain.RegisterRequest) (*domain.RegisterRe
 	}
 
 	user.Password = hashedPassword
-	user.RoleId = ROLE_USER
+	user.RoleId = constants.ROLE_USER
 	userRegistered, err := s.UserRepository.Register(user)
 
 	if err != nil {
@@ -66,9 +61,15 @@ func (s *UserService) Login(loginRequest *domain.LoginRequest) (*domain.LoginRes
 	}
 
 	//Generate a session or token for authentication
+	token, err := utils.GenerateJWT(user)
+
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
 
 	return &domain.LoginResponse{
 		Username: user.Username,
-		Token:    "token",
+		Token:    token,
 	}, nil
 }

@@ -9,6 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/n0o01lh/llp/internals/core/ports"
+	"github.com/n0o01lh/llp/internals/middlewares"
 )
 
 type Server struct {
@@ -53,32 +54,32 @@ func (s *Server) Initialize() {
 	iw := io.MultiWriter(os.Stdout, serverLogsFile)
 	log.SetOutput(iw)
 
-	resourceRoutes := app.Group("/resource")
+	resourceRoutes := app.Group("/resource", middlewares.AuthenticationMiddleware)
 
-	resourceRoutes.Post("/create", s.resourceHandlers.Create)
+	resourceRoutes.Post("/create", middlewares.AuthorizationTeacherMiddleware, s.resourceHandlers.Create)
 	resourceRoutes.Get("/list", s.resourceHandlers.ListAll)
 	resourceRoutes.Get("/list-by-teacher", s.resourceHandlers.ListAllByTeacherId)
 	resourceRoutes.Get("/find", s.resourceHandlers.FindOne)
 	resourceRoutes.Get("/search", s.resourceHandlers.Search)
-	resourceRoutes.Get("/sales/:id", s.resourceHandlers.SalesHistory)
-	resourceRoutes.Get("/sales-by-teacher/:id", s.resourceHandlers.SalesHistoryByTeacher)
-	resourceRoutes.Get("/sales-count-by-teacher/:id", s.resourceHandlers.SalesCountHistoryByTeacher)
-	resourceRoutes.Patch("/update/:id", s.resourceHandlers.Update)
-	resourceRoutes.Delete("/delete/:id", s.resourceHandlers.Delete)
+	resourceRoutes.Get("/sales/:id", middlewares.AuthorizationTeacherMiddleware, s.resourceHandlers.SalesHistory)
+	resourceRoutes.Get("/sales-by-teacher/:id", middlewares.AuthorizationTeacherMiddleware, s.resourceHandlers.SalesHistoryByTeacher)
+	resourceRoutes.Get("/sales-count-by-teacher/:id", middlewares.AuthorizationTeacherMiddleware, s.resourceHandlers.SalesCountHistoryByTeacher)
+	resourceRoutes.Patch("/update/:id", middlewares.AuthorizationTeacherMiddleware, s.resourceHandlers.Update)
+	resourceRoutes.Delete("/delete/:id", middlewares.AuthorizationTeacherMiddleware, s.resourceHandlers.Delete)
 
-	courseRoutes := app.Group("/course")
+	courseRoutes := app.Group("/course", middlewares.AuthenticationMiddleware)
 
-	courseRoutes.Post("/create", s.courseHandlers.Create)
+	courseRoutes.Post("/create", middlewares.AuthorizationTeacherMiddleware, s.courseHandlers.Create)
 	courseRoutes.Get("/list", s.courseHandlers.ListAll)
 	courseRoutes.Get("/list-by-teacher", s.courseHandlers.ListAllByTeacherId)
 	courseRoutes.Get("/find", s.courseHandlers.FindOne)
-	courseRoutes.Get("/sales/:teacher_id", s.courseHandlers.SalesHistory)
-	courseRoutes.Patch("/update/:id", s.courseHandlers.Update)
-	courseRoutes.Delete("/delete/:id", s.courseHandlers.Delete)
+	courseRoutes.Get("/sales/:teacher_id", middlewares.AuthorizationTeacherMiddleware, s.courseHandlers.SalesHistory)
+	courseRoutes.Patch("/update/:id", middlewares.AuthorizationTeacherMiddleware, s.courseHandlers.Update)
+	courseRoutes.Delete("/delete/:id", middlewares.AuthorizationTeacherMiddleware, s.courseHandlers.Delete)
 	//resource_course adding resource to course
-	courseRoutes.Post("/add-one-resource", s.resourceCourseHandlers.AddResourceToCourse)
-	courseRoutes.Post("/add-resources", s.resourceCourseHandlers.AsignCourseToResources)
-	courseRoutes.Delete("/remove-resource", s.resourceCourseHandlers.RemoveResourceFromCourse)
+	courseRoutes.Post("/add-one-resource", middlewares.AuthorizationTeacherMiddleware, s.resourceCourseHandlers.AddResourceToCourse)
+	courseRoutes.Post("/add-resources", middlewares.AuthorizationTeacherMiddleware, s.resourceCourseHandlers.AsignCourseToResources)
+	courseRoutes.Delete("/remove-resource", middlewares.AuthorizationTeacherMiddleware, s.resourceCourseHandlers.RemoveResourceFromCourse)
 
 	userRoutes := app.Group("/user")
 
