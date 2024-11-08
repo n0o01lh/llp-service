@@ -1,7 +1,7 @@
 package constants
 
 const (
-	ROLE_ADMIN   = 1
-	ROLE_USER    = 2
-	ROLE_TEACHER = 3
+	ROLE_USER    = 1
+	ROLE_TEACHER = 2
+	ROLE_ADMIN   = 3
 )
