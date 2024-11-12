@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strings"
 
@@ -170,15 +171,17 @@ func (h *CourseHandlers) Delete(ctx *fiber.Ctx) error {
 }
 
 func (h *CourseHandlers) SalesHistory(ctx *fiber.Ctx) error {
-	id, err := ctx.ParamsInt("teacher_id")
 
-	if err != nil {
+	user := ctx.Locals("user").(*domain.User)
+
+	if user == nil {
+		err := errors.New("User don't exist")
 		log.Error(err)
 		ctx.Status(http.StatusBadRequest)
 		return err
 	}
 
-	salesHistory, err := h.courseService.SalesHistory(uint(id))
+	salesHistory, err := h.courseService.SalesHistory(uint(user.Id))
 
 	if err != nil {
 		log.Error(err)
