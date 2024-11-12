@@ -62,8 +62,8 @@ func (s *Server) Initialize() {
 	resourceRoutes.Get("/find", s.resourceHandlers.FindOne)
 	resourceRoutes.Get("/search", s.resourceHandlers.Search)
 	resourceRoutes.Get("/sales/:id", middlewares.AuthorizationTeacherMiddleware, s.resourceHandlers.SalesHistory)
-	resourceRoutes.Get("/sales-by-teacher/:id", middlewares.AuthorizationTeacherMiddleware, s.resourceHandlers.SalesHistoryByTeacher)
-	resourceRoutes.Get("/sales-count-by-teacher/:id", middlewares.AuthorizationTeacherMiddleware, s.resourceHandlers.SalesCountHistoryByTeacher)
+	resourceRoutes.Get("/sales-by-teacher", middlewares.AuthorizationTeacherMiddleware, s.resourceHandlers.SalesHistoryByTeacher)
+	resourceRoutes.Get("/sales-count-by-teacher", middlewares.AuthorizationTeacherMiddleware, s.resourceHandlers.SalesCountHistoryByTeacher)
 	resourceRoutes.Patch("/update/:id", middlewares.AuthorizationTeacherMiddleware, s.resourceHandlers.Update)
 	resourceRoutes.Delete("/delete/:id", middlewares.AuthorizationTeacherMiddleware, s.resourceHandlers.Delete)
 
@@ -73,7 +73,7 @@ func (s *Server) Initialize() {
 	courseRoutes.Get("/list", s.courseHandlers.ListAll)
 	courseRoutes.Get("/list-by-teacher", s.courseHandlers.ListAllByTeacherId)
 	courseRoutes.Get("/find", s.courseHandlers.FindOne)
-	courseRoutes.Get("/sales/:teacher_id", middlewares.AuthorizationTeacherMiddleware, s.courseHandlers.SalesHistory)
+	courseRoutes.Get("/sales", middlewares.AuthorizationTeacherMiddleware, s.courseHandlers.SalesHistory)
 	courseRoutes.Patch("/update/:id", middlewares.AuthorizationTeacherMiddleware, s.courseHandlers.Update)
 	courseRoutes.Delete("/delete/:id", middlewares.AuthorizationTeacherMiddleware, s.courseHandlers.Delete)
 	//resource_course adding resource to course

@@ -214,15 +214,17 @@ func (h *ResourceHandlers) SalesHistory(ctx *fiber.Ctx) error {
 }
 
 func (h *ResourceHandlers) SalesHistoryByTeacher(ctx *fiber.Ctx) error {
-	id, err := ctx.ParamsInt("id")
 
-	if err != nil {
+	user := ctx.Locals("user").(*domain.User)
+
+	if user == nil {
+		err := errors.New("User don't exist")
 		log.Error(err)
 		ctx.Status(http.StatusBadRequest)
 		return err
 	}
 
-	salesHistory, err := h.resourceService.SalesHistoryByTeacher(uint(id))
+	salesHistory, err := h.resourceService.SalesHistoryByTeacher(uint(user.Id))
 
 	if err != nil {
 		log.Error(err)
@@ -238,17 +240,17 @@ func (h *ResourceHandlers) SalesHistoryByTeacher(ctx *fiber.Ctx) error {
 
 func (h *ResourceHandlers) SalesCountHistoryByTeacher(ctx *fiber.Ctx) error {
 
-	id, err := ctx.ParamsInt("id")
+	user := ctx.Locals("user").(*domain.User)
 
-	if err != nil {
+	if user == nil {
+		err := errors.New("User don't exist")
 		log.Error(err)
 		ctx.Status(http.StatusBadRequest)
 		return err
 	}
 
 	limit := ctx.QueryInt("limit", 0)
-
-	salesCountHistory, err := h.resourceService.SalesCountHistoryByTeacher(uint(id), limit)
+	salesCountHistory, err := h.resourceService.SalesCountHistoryByTeacher(uint(user.Id), limit)
 
 	if err != nil {
 		log.Error(err)
