@@ -28,7 +28,10 @@ var _ ports.ResourceHandlers = (*ResourceHandlers)(nil)
 func (h *ResourceHandlers) Create(ctx *fiber.Ctx) error {
 
 	resource := new(domain.Resource)
+	user := ctx.Locals("user").(*domain.User)
 	err := ctx.BodyParser(&resource)
+
+	resource.Teacher_id = int(user.Id)
 
 	validationErrors := utils.Validate(resource)
 
@@ -116,7 +119,10 @@ func (h *ResourceHandlers) FindOne(ctx *fiber.Ctx) error {
 func (h *ResourceHandlers) Update(ctx *fiber.Ctx) error {
 
 	id, err := ctx.ParamsInt("id")
+	user := ctx.Locals("user").(*domain.User)
 	resource := new(domain.Resource)
+
+	resource.Teacher_id = int(user.Id)
 
 	if err != nil {
 		log.Error(err)

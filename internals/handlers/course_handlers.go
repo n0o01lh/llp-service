@@ -28,7 +28,10 @@ var _ ports.CourseHandlers = (*CourseHandlers)(nil)
 func (h *CourseHandlers) Create(ctx *fiber.Ctx) error {
 
 	course := new(domain.Course)
+	user := ctx.Locals("user").(*domain.User)
 	err := ctx.BodyParser(&course)
+
+	course.Teacher_id = int(user.Id)
 
 	validationErrors := utils.Validate(course)
 
@@ -118,7 +121,10 @@ func (h *CourseHandlers) FindOne(ctx *fiber.Ctx) error {
 func (h *CourseHandlers) Update(ctx *fiber.Ctx) error {
 
 	id, err := ctx.ParamsInt("id")
+	user := ctx.Locals("user").(*domain.User)
 	course := new(domain.Course)
+
+	course.Teacher_id = int(user.Id)
 
 	if err != nil {
 		log.Error(err)
