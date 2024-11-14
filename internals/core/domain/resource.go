@@ -8,8 +8,8 @@ type Resource struct {
 	UpdatedAt   time.Time `json:"updatedAt"`
 	Title       string    `json:"title" validate:"required"`
 	Description string    `json:"description"`
-	Type        string    `json:"resource_type" validate:"required,oneof=video audio document"`
-	Url         string    `json:"url"`
+	Type        string    `json:"resource_type" validate:"required,oneof=video audio document reading quiz"`
+	Content     string    `json:"content"`
 	Price       float64   `json:"price" validate:"required,gt=0"`
 	Teacher_id  int       `json:"teacher_id" validate:"required"`
 	Duration    int       `json:"duration"`
@@ -18,14 +18,14 @@ type Resource struct {
 	Courses     []*Course `gorm:"many2many:resources_courses;constraint:OnDelete:CASCADE"`
 }
 
-func NewResource(id uint, title string, description string, resource_type string, url string, price float64, teacher_id int, duration int, image string, publicId string) *Resource {
+func NewResource(id uint, title string, description string, resource_type string, content string, price float64, teacher_id int, duration int, image string, publicId string) *Resource {
 
 	return &Resource{
 		Id:          id,
 		Title:       title,
 		Description: description,
 		Type:        resource_type,
-		Url:         url,
+		Content:     content,
 		Price:       price,
 		Teacher_id:  teacher_id,
 		Duration:    duration,
