@@ -85,7 +85,7 @@ func (r *ResourceRepository) Update(id uint, resource *domain.Resource) (*domain
 	updatedResourceMap["title"] = resource.Title
 	updatedResourceMap["description"] = resource.Description
 	updatedResourceMap["type"] = resource.Type
-	updatedResourceMap["url"] = resource.Url
+	updatedResourceMap["content"] = resource.Content
 	updatedResourceMap["price"] = resource.Price
 	updatedResourceMap["duration"] = resource.Duration
 	updatedResourceMap["image"] = resource.Image
