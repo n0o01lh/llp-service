@@ -7,8 +7,8 @@ import (
 
 type ResourceService interface {
 	Create(resource *domain.Resource) (*domain.Resource, error)
-	ListAll() ([]*domain.Resource, error)
-	ListAllByTeacherId(teacherId uint) ([]*domain.Resource, error)
+	ListAll(pagination *domain.Pagination) (*domain.Pagination, error)
+	ListAllByTeacherId(teacherId uint, pagination *domain.Pagination) (*domain.Pagination, error)
 	FindOne(id uint) (*domain.Resource, error)
 	Update(id uint, resource *domain.Resource) (*domain.Resource, error)
 	Delete(id uint) error
@@ -20,8 +20,8 @@ type ResourceService interface {
 
 type ResourceRepository interface {
 	Create(resource *domain.Resource) (*domain.Resource, error)
-	ListAll() ([]*domain.Resource, error)
-	ListAllByTeacherId(teacherId uint) ([]*domain.Resource, error)
+	ListAll(pagination *domain.Pagination) (*domain.Pagination, error)
+	ListAllByTeacherId(teacherId uint, pagination *domain.Pagination) (*domain.Pagination, error)
 	FindOne(id uint) (*domain.Resource, error)
 	Update(id uint, resource *domain.Resource) (*domain.Resource, error)
 	Delete(id uint) error

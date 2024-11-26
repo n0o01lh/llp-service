@@ -66,7 +66,14 @@ func (h *ResourceHandlers) Create(ctx *fiber.Ctx) error {
 }
 
 func (h *ResourceHandlers) ListAll(ctx *fiber.Ctx) error {
-	resourceList, err := h.resourceService.ListAll()
+	limit := ctx.QueryInt("limit")
+	page := ctx.QueryInt("page")
+	pagination := new(domain.Pagination)
+
+	pagination.Limit = limit
+	pagination.Page = page
+
+	resourceList, err := h.resourceService.ListAll(pagination)
 
 	if err != nil {
 		log.Error(err)
@@ -82,8 +89,14 @@ func (h *ResourceHandlers) ListAll(ctx *fiber.Ctx) error {
 
 func (h *ResourceHandlers) ListAllByTeacherId(ctx *fiber.Ctx) error {
 	teacherId := ctx.QueryInt("id")
+	limit := ctx.QueryInt("limit")
+	page := ctx.QueryInt("page")
+	pagination := new(domain.Pagination)
 
-	resourceList, err := h.resourceService.ListAllByTeacherId(uint(teacherId))
+	pagination.Limit = limit
+	pagination.Page = page
+
+	resourceList, err := h.resourceService.ListAllByTeacherId(uint(teacherId), pagination)
 
 	if err != nil {
 		log.Error(err)

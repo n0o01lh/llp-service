@@ -49,8 +49,8 @@ func (service *ResourceService) Create(resource *domain.Resource) (*domain.Resou
 	return resourceCreated, nil
 }
 
-func (service *ResourceService) ListAll() ([]*domain.Resource, error) {
-	resourceList, err := service.resourceRepository.ListAll()
+func (service *ResourceService) ListAll(pagination *domain.Pagination) (*domain.Pagination, error) {
+	resourceList, err := service.resourceRepository.ListAll(pagination)
 
 	if err != nil {
 		return nil, err
@@ -59,8 +59,8 @@ func (service *ResourceService) ListAll() ([]*domain.Resource, error) {
 	return resourceList, nil
 }
 
-func (service *ResourceService) ListAllByTeacherId(teacherId uint) ([]*domain.Resource, error) {
-	resourceList, err := service.resourceRepository.ListAllByTeacherId(teacherId)
+func (service *ResourceService) ListAllByTeacherId(teacherId uint, pagination *domain.Pagination) (*domain.Pagination, error) {
+	resourceList, err := service.resourceRepository.ListAllByTeacherId(teacherId, pagination)
 
 	if err != nil {
 		return nil, err
