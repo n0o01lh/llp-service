@@ -2,11 +2,13 @@ package repositories
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/n0o01lh/llp/internals/core/domain"
 	"github.com/n0o01lh/llp/internals/core/ports"
 	"github.com/n0o01lh/llp/internals/repositories/queries"
+	"github.com/n0o01lh/llp/internals/utils"
 	"gorm.io/gorm"
 )
 
@@ -36,30 +38,33 @@ func (r *ResourceRepository) Create(resource *domain.Resource) (*domain.Resource
 	return newResource, nil
 }
 
-func (r *ResourceRepository) ListAll() ([]*domain.Resource, error) {
+func (r *ResourceRepository) ListAll(pagination *domain.Pagination) (*domain.Pagination, error) {
 
 	var resourceList []*domain.Resource
 
-	r.Database.Preload("Courses").Find(&resourceList)
+	//TODO: need to get pagination type and past into Paginate function
+	r.Database.Preload("Courses").Scopes(utils.Paginate(resourceList, "", pagination, r.Database)).Find(&resourceList)
 
 	if resourceList == nil {
 		return nil, errors.New("resources not found")
 	}
+	pagination.Rows = resourceList
 
-	return resourceList, nil
+	return pagination, nil
 }
 
-func (r *ResourceRepository) ListAllByTeacherId(teacherId uint) ([]*domain.Resource, error) {
+func (r *ResourceRepository) ListAllByTeacherId(teacherId uint, pagination *domain.Pagination) (*domain.Pagination, error) {
 
 	var resourceList []*domain.Resource
 
-	r.Database.Preload("Courses").Where("teacher_id = ?", teacherId).Order("created_at DESC").Find(&resourceList)
+	r.Database.Preload("Courses").Scopes(utils.Paginate(resourceList, fmt.Sprintf("teacher_id = %d", teacherId), pagination, r.Database)).Where("teacher_id = ?", teacherId).Order("created_at DESC").Find(&resourceList)
 
 	if resourceList == nil {
 		return nil, errors.New("resources not found")
 	}
+	pagination.Rows = resourceList
 
-	return resourceList, nil
+	return pagination, nil
 }
 
 func (r *ResourceRepository) FindOne(id uint) (*domain.Resource, error) {
