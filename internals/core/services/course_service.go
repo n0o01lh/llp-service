@@ -42,8 +42,8 @@ func (service *CourseService) ListAll() ([]*domain.Course, error) {
 	return courseList, nil
 }
 
-func (service *CourseService) ListAllByTeacherId(teacherId uint) ([]*domain.Course, error) {
-	courseList, err := service.courseRepository.ListAllByTeacherId(teacherId)
+func (service *CourseService) ListAllByTeacherId(teacherId uint, pagination *domain.Pagination) (*domain.Pagination, error) {
+	courseList, err := service.courseRepository.ListAllByTeacherId(teacherId, pagination)
 
 	if err != nil {
 		return nil, err

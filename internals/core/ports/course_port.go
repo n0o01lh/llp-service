@@ -8,7 +8,7 @@ import (
 type CourseService interface {
 	Create(course *domain.Course) (*domain.Course, error)
 	ListAll() ([]*domain.Course, error)
-	ListAllByTeacherId(teacherId uint) ([]*domain.Course, error)
+	ListAllByTeacherId(teacherId uint, pagination *domain.Pagination) (*domain.Pagination, error)
 	FindOne(id uint) (*domain.Course, error)
 	Update(id uint, course *domain.Course) (*domain.Course, error)
 	Delete(id uint) error
@@ -18,7 +18,7 @@ type CourseService interface {
 type CourseRepository interface {
 	Create(course *domain.Course) (*domain.Course, error)
 	ListAll() ([]*domain.Course, error)
-	ListAllByTeacherId(teacherId uint) ([]*domain.Course, error)
+	ListAllByTeacherId(teacherId uint, pagination *domain.Pagination) (*domain.Pagination, error)
 	FindOne(id uint) (*domain.Course, error)
 	Update(id uint, course *domain.Course) (*domain.Course, error)
 	Delete(id uint) error

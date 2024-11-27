@@ -2,11 +2,13 @@ package repositories
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/n0o01lh/llp/internals/core/domain"
 	"github.com/n0o01lh/llp/internals/core/ports"
 	"github.com/n0o01lh/llp/internals/repositories/queries"
+	"github.com/n0o01lh/llp/internals/utils"
 	"gorm.io/gorm"
 )
 
@@ -49,17 +51,18 @@ func (r *CourseRepository) ListAll() ([]*domain.Course, error) {
 	return courseList, nil
 }
 
-func (r *CourseRepository) ListAllByTeacherId(teacherId uint) ([]*domain.Course, error) {
+func (r *CourseRepository) ListAllByTeacherId(teacherId uint, pagination *domain.Pagination) (*domain.Pagination, error) {
 
 	var courseList []*domain.Course
 
-	r.Database.Preload("Resources").Where("teacher_id = ?", teacherId).Order("created_at DESC").Find(&courseList)
+	r.Database.Preload("Resources").Scopes(utils.Paginate(courseList, fmt.Sprintf("teacher_id = %d", teacherId), pagination, r.Database)).Where("teacher_id = ?", teacherId).Order("created_at DESC").Find(&courseList)
 
 	if courseList == nil {
 		return nil, errors.New("courses not found")
 	}
+	pagination.Rows = courseList
 
-	return courseList, nil
+	return pagination, nil
 }
 
 func (r *CourseRepository) FindOne(id uint) (*domain.Course, error) {

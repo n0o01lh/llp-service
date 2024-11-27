@@ -83,8 +83,14 @@ func (h *CourseHandlers) ListAll(ctx *fiber.Ctx) error {
 
 func (h *CourseHandlers) ListAllByTeacherId(ctx *fiber.Ctx) error {
 	teacherId := ctx.QueryInt("id")
+	limit := ctx.QueryInt("limit")
+	page := ctx.QueryInt("page")
+	pagination := new(domain.Pagination)
 
-	courseList, err := h.courseService.ListAllByTeacherId(uint(teacherId))
+	pagination.Limit = limit
+	pagination.Page = page
+
+	courseList, err := h.courseService.ListAllByTeacherId(uint(teacherId), pagination)
 
 	if err != nil {
 		log.Error(err)
@@ -92,9 +98,8 @@ func (h *CourseHandlers) ListAllByTeacherId(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	response, _ := json.Marshal(courseList)
-
-	ctx.Send(response)
+	ctx.JSON(courseList)
+	ctx.Status(http.StatusOK)
 	return nil
 }
 
