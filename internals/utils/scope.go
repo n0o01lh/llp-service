@@ -12,11 +12,18 @@ func Paginate(value interface{}, whereClause string, pagination *domain.Paginati
 	db.Model(value).Where(whereClause).Count(&totalRows)
 
 	pagination.TotalRows = totalRows
-	totalPages := int(math.Ceil(float64(totalRows) / float64(pagination.GetLimit())))
+	totalPages := 0
+	limit := pagination.GetLimit()
+	if pagination.GetLimit() > 0 {
+		totalPages = int(math.Ceil(float64(totalRows) / float64(pagination.GetLimit())))
+	} else {
+		limit = -1
+	}
+
 	pagination.TotalPages = totalPages
 
 	return func(db *gorm.DB) *gorm.DB {
-		return db.Offset(pagination.GetOffset()).Limit(pagination.GetLimit()).Order(pagination.GetSort())
+		return db.Offset(pagination.GetOffset()).Limit(limit).Order(pagination.GetSort())
 	}
 }
 
