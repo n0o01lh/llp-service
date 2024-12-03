@@ -190,12 +190,19 @@ func (h *ResourceHandlers) Delete(ctx *fiber.Ctx) error {
 
 func (h *ResourceHandlers) Search(ctx *fiber.Ctx) error {
 	criteria := ctx.Query("title")
+	teacherId := ctx.QueryInt("teacher")
+	limit := ctx.QueryInt("limit")
+	page := ctx.QueryInt("page")
+	pagination := new(domain.Pagination)
+
+	pagination.Limit = limit
+	pagination.Page = page
 
 	if criteria == "" {
 		return errors.New("Criteria is empty")
 	}
 
-	resources, err := h.resourceService.Search(criteria)
+	resources, err := h.resourceService.Search(criteria, uint(teacherId), pagination)
 
 	if err != nil {
 		log.Error(err)

@@ -12,7 +12,7 @@ type ResourceService interface {
 	FindOne(id uint) (*domain.Resource, error)
 	Update(id uint, resource *domain.Resource) (*domain.Resource, error)
 	Delete(id uint) error
-	Search(criteria string) ([]*domain.Resource, error)
+	Search(criteria string, teacherId uint, pagination *domain.Pagination) (*domain.Pagination, error)
 	SalesHistory(resourceId uint) ([]*domain.ResourceSalesHisotry, error)
 	SalesHistoryByTeacher(teacherId uint) ([]*domain.ResourceSalesHisotry, error)
 	SalesCountHistoryByTeacher(teacherId uint, limit int) ([]*domain.ResourcePopularHistory, error)
@@ -25,7 +25,7 @@ type ResourceRepository interface {
 	FindOne(id uint) (*domain.Resource, error)
 	Update(id uint, resource *domain.Resource) (*domain.Resource, error)
 	Delete(id uint) error
-	Search(criteria string) ([]*domain.Resource, error)
+	Search(criteria string, teacherId uint, pagination *domain.Pagination) (*domain.Pagination, error)
 	SalesHistory(resourceId uint) ([]*domain.ResourceSalesHisotry, error)
 	SalesHistoryByTeacher(teacherId uint) ([]*domain.ResourceSalesHisotry, error)
 	SalesCountHistoryByTeacher(teacherId uint, limit int) ([]*domain.ResourcePopularHistory, error)

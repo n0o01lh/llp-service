@@ -121,17 +121,55 @@ func (r *ResourceRepository) Delete(id uint) error {
 	return nil
 }
 
-func (r *ResourceRepository) Search(criteria string) ([]*domain.Resource, error) {
+func (r *ResourceRepository) getResourcesResultsWithTeacherFilter(resources []*domain.Resource, criteria string, teacherId uint, pagination *domain.Pagination) ([]*domain.Resource, error) {
+	result := r.Database.
+		Scopes(utils.Paginate(resources, fmt.Sprintf("lower(title) LIKE lower('%%%s%%') and teacher_id = %d", criteria, teacherId), pagination, r.Database)).
+		Where("lower(title) LIKE lower(?)", "%"+criteria+"%").
+		Where("teacher_id=?", teacherId).
+		Table("resources").
+		Find(&resources)
+
+	return resources, result.Error
+}
+
+func (r *ResourceRepository) getResourcesResultsWithOutTeacherFilter(resources []*domain.Resource, criteria string, teacherId uint, pagination *domain.Pagination) ([]*domain.Resource, error) {
+	result := r.Database.
+		Scopes(utils.Paginate(resources, fmt.Sprintf("lower(title) LIKE lower('%%%s%%')", criteria), pagination, r.Database)).
+		Where("lower(title) LIKE lower(?)", "%"+criteria+"%").
+		Table("resources").
+		Find(&resources)
+
+	return resources, result.Error
+}
+
+func (r *ResourceRepository) Search(criteria string, teacherId uint, pagination *domain.Pagination) (*domain.Pagination, error) {
 
 	var resources []*domain.Resource
+	//whereClause := ""
 
-	result := r.Database.Where("lower(title) LIKE lower(?)", "%"+criteria+"%").Table("resources").Find(&resources)
+	var err error
+	var results []*domain.Resource
+	if teacherId > 0 {
+		results, err = r.getResourcesResultsWithTeacherFilter(resources, criteria, teacherId, pagination)
+		//whereClause = fmt.Sprintf("teacher_id=%d", teacherId)
+	} else {
+		results, err = r.getResourcesResultsWithOutTeacherFilter(resources, criteria, teacherId, pagination)
+	}
 
-	if result.Error != nil {
+	//r.Database.Preload("Resources").Scopes(utils.Paginate(courseList, fmt.Sprintf("teacher_id = %d", teacherId), pagination, r.Database)).Where("teacher_id = ?", teacherId).Order("created_at DESC").Find(&courseList)
+
+	/* 	result := r.Database.Where("lower(title) LIKE lower(?)", "%"+criteria+"%").
+	Where(whereClause).
+	Table("resources").
+	Find(&resources) */
+
+	if err != nil {
 		return nil, errors.New("error performing search on database")
 	}
 
-	return resources, nil
+	pagination.Rows = results
+
+	return pagination, nil
 }
 
 func (r *ResourceRepository) SalesHistory(resourceId uint) ([]*domain.ResourceSalesHisotry, error) {
