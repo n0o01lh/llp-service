@@ -142,9 +142,9 @@ func (service *ResourceService) Delete(id uint) error {
 	return nil
 }
 
-func (service *ResourceService) Search(criteria string) ([]*domain.Resource, error) {
+func (service *ResourceService) Search(criteria string, teacherId uint, pagination *domain.Pagination) (*domain.Pagination, error) {
 
-	resources, err := service.resourceRepository.Search(criteria)
+	resources, err := service.resourceRepository.Search(criteria, teacherId, pagination)
 
 	if err != nil {
 		log.Error(err)
