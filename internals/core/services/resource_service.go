@@ -151,8 +151,6 @@ func (service *ResourceService) Search(criteria string, teacherId uint, paginati
 		return nil, err
 	}
 
-	log.Debug(&resources)
-
 	return resources, nil
 }
 

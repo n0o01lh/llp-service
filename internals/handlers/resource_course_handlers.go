@@ -64,10 +64,19 @@ func (h *ResourceCourseHandlers) AsignCourseToResources(ctx *fiber.Ctx) error {
 		return error
 	}
 
-	resources, _ := requestBody["resources"].([]any)
+	resources, _ := requestBody["resources"].([]interface{})
 	course_id := requestBody["course_id"].(float64)
 
-	courseUpdated, error := h.resourceCourseService.AsignCourseToResources(resources, uint(course_id))
+	myResources := make([]domain.ResourceCourse, len(resources))
+
+	for index, resource := range resources {
+		resourceMap, _ := resource.(map[string]interface{})
+
+		myResources[index].ResourceId = uint(resourceMap["resource_id"].(float64))
+		myResources[index].Order = int(resourceMap["order"].(float64))
+	}
+
+	courseUpdated, error := h.resourceCourseService.AsignCourseToResources(myResources, uint(course_id))
 
 	if error != nil {
 		log.Error(error)
