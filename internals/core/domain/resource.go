@@ -3,19 +3,20 @@ package domain
 import "time"
 
 type Resource struct {
-	Id          uint      `json:"id" gorm:"primaryKey;size:256"`
-	CreatedAt   time.Time `json:"createdAt"`
-	UpdatedAt   time.Time `json:"updatedAt"`
-	Title       string    `json:"title" validate:"required"`
-	Description string    `json:"description"`
-	Type        string    `json:"resource_type" validate:"required,oneof=video audio document reading quiz"`
-	Content     string    `json:"content"`
-	Price       float64   `json:"price" validate:"required,gt=0"`
-	Teacher_id  int       `json:"teacher_id" validate:"required"`
-	Duration    int       `json:"duration"`
-	Image       string    `json:"image"`
-	PublicId    string    `json:"public_id"`
-	Courses     []*Course `gorm:"many2many:resources_courses;constraint:OnDelete:CASCADE"`
+	Id          uint                   `json:"id" gorm:"primaryKey;size:256"`
+	CreatedAt   time.Time              `json:"createdAt"`
+	UpdatedAt   time.Time              `json:"updatedAt"`
+	Title       string                 `json:"title" validate:"required"`
+	Description string                 `json:"description"`
+	Type        string                 `json:"resource_type" validate:"required,oneof=video audio document reading quiz"`
+	Content     string                 `json:"content"`
+	Price       float64                `json:"price" validate:"required,gt=0"`
+	Teacher_id  int                    `json:"teacher_id" validate:"required"`
+	Duration    int                    `json:"duration"`
+	Image       string                 `json:"image"`
+	PublicId    string                 `json:"public_id"`
+	ExtraFields map[string]interface{} `json:"extra_fields" gorm:"-"`
+	Courses     []*Course              `gorm:"many2many:resources_courses;constraint:OnDelete:CASCADE"`
 }
 
 func NewResource(id uint, title string, description string, resource_type string, content string, price float64, teacher_id int, duration int, image string, publicId string) *Resource {

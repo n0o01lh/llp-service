@@ -3,6 +3,7 @@ package repositories
 import (
 	"errors"
 	"fmt"
+	"sort"
 
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/n0o01lh/llp/internals/core/domain"
@@ -56,6 +57,23 @@ func (r *CourseRepository) ListAllByTeacherId(teacherId uint, pagination *domain
 	var courseList []*domain.Course
 
 	r.Database.Preload("Resources").Scopes(utils.Paginate(courseList, fmt.Sprintf("teacher_id = %d", teacherId), pagination, r.Database)).Where("teacher_id = ?", teacherId).Order("created_at DESC").Find(&courseList)
+
+	//This block adds order to the resources list of the course in order to be handled by the front in the drag and drop component
+	for i := range courseList {
+		for j := range courseList[i].Resources {
+			var resourceCourse domain.ResourceCourse
+
+			r.Database.Table("resources_courses").Where("resource_id = ? and course_id = ?", courseList[i].Resources[j].Id, courseList[i].Id).Find(&resourceCourse)
+
+			courseList[i].Resources[j].ExtraFields = make(map[string]interface{})
+			courseList[i].Resources[j].ExtraFields["order"] = resourceCourse.Order
+
+		}
+	}
+
+	for i := range courseList {
+		sort.Sort(domain.ByOrder(courseList[i].Resources))
+	}
 
 	if courseList == nil {
 		return nil, errors.New("courses not found")

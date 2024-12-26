@@ -1,8 +1,8 @@
 package repositories
 
 import (
-	"errors"
-	"fmt"
+	//"errors"
+	//"fmt"
 
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/n0o01lh/llp/internals/core/domain"
@@ -23,7 +23,7 @@ func NewResourceCourseRepository(db *gorm.DB) *ResourceCourseRepository {
 
 var _ ports.ResourceCourseRepository = (*ResourceCourseRepository)(nil)
 
-func (rc *ResourceCourseRepository) AddResourceToCourse(resourceId, courseId uint) (*domain.ResourceCourse, error) {
+func (rc *ResourceCourseRepository) AddResourceToCourse(resourceId, order, courseId uint) (*domain.ResourceCourse, error) {
 
 	recordExists, err := db_utils.IsRecordExists(rc.database,
 		"resources_courses", "resource_id = ? and course_id = ?",
@@ -34,14 +34,27 @@ func (rc *ResourceCourseRepository) AddResourceToCourse(resourceId, courseId uin
 		return nil, err
 	}
 
+	log.Info("recordExists", recordExists)
+
+	var resourceCourse *domain.ResourceCourse = &domain.ResourceCourse{
+		ResourceId: resourceId,
+		CourseId:   courseId,
+		Order:      int(order),
+	}
+
 	if recordExists {
-		errorStr := fmt.Sprintf("Resource with id %d already exists in course with id %d", resourceId, courseId)
-		return nil, errors.New(errorStr)
-	} else {
-		var resourceCourse *domain.ResourceCourse = &domain.ResourceCourse{
-			Resource_id: resourceId,
-			Course_id:   courseId,
+		//errorStr := fmt.Sprintf("Resource with id %d already exists in course with id %d", resourceId, courseId)
+
+		//change order
+		result := rc.database.Raw(`update resources_courses set "order" = ? where course_id = ? and resource_id = ?`, order, courseId, resourceId).Scan(&resourceCourse)
+
+		if result.Error != nil {
+			log.Error("Error updating table resource_course", result.Error)
+			return nil, result.Error
 		}
+		return resourceCourse, nil
+		//return nil, errors.New(errorStr)
+	} else {
 
 		result := rc.database.Table("resources_courses").Create(&resourceCourse)
 

@@ -7,12 +7,12 @@ import (
 
 type ResourceCourseService interface {
 	AddResourceToCourse(resourceId, courseId uint) (*domain.ResourceCourse, error)
-	AsignCourseToResources(resources []any, courseId uint) ([]*domain.ResourceCourseResponse, error)
+	AsignCourseToResources(resources []domain.ResourceCourse, courseId uint) ([]*domain.ResourceCourseResponse, error)
 	RemoveResourceFromCourse(resourceId, courseId uint) error
 }
 
 type ResourceCourseRepository interface {
-	AddResourceToCourse(resourceId, courseId uint) (*domain.ResourceCourse, error)
+	AddResourceToCourse(resourceId, order, courseId uint) (*domain.ResourceCourse, error)
 	AsignCourseToResources(resources []uint, courseId uint) (*domain.ResourceCourse, error)
 	RemoveResourceFromCourse(resourceId, courseId uint) error
 }

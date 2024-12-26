@@ -25,7 +25,7 @@ var _ ports.ResourceCourseService = (*ResourceCourseService)(nil)
 
 func (s *ResourceCourseService) AddResourceToCourse(resourceId, courseId uint) (*domain.ResourceCourse, error) {
 
-	result, error := s.resourceCourseRepository.AddResourceToCourse(resourceId, courseId)
+	result, error := s.resourceCourseRepository.AddResourceToCourse(resourceId, 0, courseId)
 
 	if error != nil {
 		log.Error(error)
@@ -35,7 +35,7 @@ func (s *ResourceCourseService) AddResourceToCourse(resourceId, courseId uint) (
 	return result, nil
 }
 
-func (s *ResourceCourseService) AsignCourseToResources(resources []any, courseId uint) ([]*domain.ResourceCourseResponse, error) {
+func (s *ResourceCourseService) AsignCourseToResources(resources []domain.ResourceCourse, courseId uint) ([]*domain.ResourceCourseResponse, error) {
 
 	var waitGroup sync.WaitGroup
 	/* 	var resourceCourse *domain.ResourceCourse
@@ -50,7 +50,7 @@ func (s *ResourceCourseService) AsignCourseToResources(resources []any, courseId
 
 		go func(index int) {
 
-			resourceCourse, err := s.resourceCourseRepository.AddResourceToCourse(uint(resources[index].(float64)), courseId)
+			resourceCourse, err := s.resourceCourseRepository.AddResourceToCourse(resources[index].ResourceId, uint(resources[index].Order), courseId)
 
 			resourceCourses[index] = &domain.ResourceCourseResponse{ResourceCourse: resourceCourse, Error: fmt.Sprintf("%v", err)}
 
