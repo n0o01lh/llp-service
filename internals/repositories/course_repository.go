@@ -139,3 +139,43 @@ func (r *CourseRepository) SalesHistory(teacherId uint) ([]*domain.CourseSalesHi
 
 	return salesHistory, nil
 }
+
+func (r *CourseRepository) Search(criteria string, teacherId uint, pagination *domain.Pagination) (*domain.Pagination, error) {
+
+	var courses []*domain.Course
+
+	var err error
+	var results []*domain.Course
+	if teacherId > 0 {
+		results, err = r.getCoursesResultsWithTeacherFilter(courses, criteria, teacherId, pagination)
+	} else {
+		results, err = r.getCoursesResultsWithOutTeacherFilter(courses, criteria, teacherId, pagination)
+	}
+
+	if err != nil {
+		return nil, errors.New("error performing search on database")
+	}
+
+	pagination.Rows = results
+
+	return pagination, nil
+}
+
+func (r *CourseRepository) getCoursesResultsWithTeacherFilter(courses []*domain.Course, criteria string, teacherId uint, pagination *domain.Pagination) ([]*domain.Course, error) {
+	result := r.Database.Preload("Resources").
+		Scopes(utils.Paginate(courses, fmt.Sprintf("lower(title) LIKE lower('%%%s%%') and teacher_id = %d", criteria, teacherId), pagination, r.Database)).
+		Where("lower(title) LIKE lower(?)", "%"+criteria+"%").
+		Where("teacher_id=?", teacherId).
+		Find(&courses)
+
+	return courses, result.Error
+}
+
+func (r *CourseRepository) getCoursesResultsWithOutTeacherFilter(courses []*domain.Course, criteria string, teacherId uint, pagination *domain.Pagination) ([]*domain.Course, error) {
+	result := r.Database.Preload("Resources").
+		Scopes(utils.Paginate(courses, fmt.Sprintf("lower(title) LIKE lower('%%%s%%')", criteria), pagination, r.Database)).
+		Where("lower(title) LIKE lower(?)", "%"+criteria+"%").
+		Find(&courses)
+
+	return courses, result.Error
+}

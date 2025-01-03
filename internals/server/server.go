@@ -80,6 +80,7 @@ func (s *Server) Initialize() {
 	courseRoutes.Post("/add-one-resource", middlewares.AuthorizationTeacherMiddleware, s.resourceCourseHandlers.AddResourceToCourse)
 	courseRoutes.Post("/add-resources", middlewares.AuthorizationTeacherMiddleware, s.resourceCourseHandlers.AsignCourseToResources)
 	courseRoutes.Delete("/remove-resource", middlewares.AuthorizationTeacherMiddleware, s.resourceCourseHandlers.RemoveResourceFromCourse)
+	courseRoutes.Get("/search", s.courseHandlers.Search)
 
 	userRoutes := app.Group("/user")
 

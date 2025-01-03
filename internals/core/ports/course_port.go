@@ -13,6 +13,7 @@ type CourseService interface {
 	Update(id uint, course *domain.Course) (*domain.Course, error)
 	Delete(id uint) error
 	SalesHistory(teacherId uint) ([]*domain.CourseSalesHistory, error)
+	Search(criteria string, teacherId uint, pagination *domain.Pagination) (*domain.Pagination, error)
 }
 
 type CourseRepository interface {
@@ -23,6 +24,7 @@ type CourseRepository interface {
 	Update(id uint, course *domain.Course) (*domain.Course, error)
 	Delete(id uint) error
 	SalesHistory(teacherId uint) ([]*domain.CourseSalesHistory, error)
+	Search(criteria string, teacherId uint, pagination *domain.Pagination) (*domain.Pagination, error)
 }
 
 type CourseHandlers interface {
@@ -33,4 +35,5 @@ type CourseHandlers interface {
 	Update(context *fiber.Ctx) error
 	Delete(context *fiber.Ctx) error
 	SalesHistory(context *fiber.Ctx) error
+	Search(context *fiber.Ctx) error
 }

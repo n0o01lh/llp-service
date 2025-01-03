@@ -205,3 +205,31 @@ func (h *CourseHandlers) SalesHistory(ctx *fiber.Ctx) error {
 
 	return nil
 }
+
+func (h *CourseHandlers) Search(ctx *fiber.Ctx) error {
+	criteria := ctx.Query("title")
+	teacherId := ctx.QueryInt("teacher")
+	limit := ctx.QueryInt("limit")
+	page := ctx.QueryInt("page")
+	pagination := new(domain.Pagination)
+
+	pagination.Limit = limit
+	pagination.Page = page
+
+	if criteria == "" {
+		return errors.New("Criteria is empty")
+	}
+
+	resources, err := h.courseService.Search(criteria, uint(teacherId), pagination)
+
+	if err != nil {
+		log.Error(err)
+		ctx.Status(http.StatusInternalServerError)
+		return err
+	}
+
+	ctx.JSON(resources)
+	ctx.Status(http.StatusOK)
+
+	return nil
+}

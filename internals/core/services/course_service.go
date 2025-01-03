@@ -3,6 +3,7 @@ package services
 import (
 	"time"
 
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/n0o01lh/llp/internals/core/domain"
 	"github.com/n0o01lh/llp/internals/core/ports"
 )
@@ -94,4 +95,16 @@ func (service *CourseService) SalesHistory(teacherId uint) ([]*domain.CourseSale
 	}
 
 	return salesHistory, nil
+}
+
+func (service *CourseService) Search(criteria string, teacherId uint, pagination *domain.Pagination) (*domain.Pagination, error) {
+
+	resources, err := service.courseRepository.Search(criteria, teacherId, pagination)
+
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	return resources, nil
 }
