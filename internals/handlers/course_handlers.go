@@ -216,10 +216,6 @@ func (h *CourseHandlers) Search(ctx *fiber.Ctx) error {
 	pagination.Limit = limit
 	pagination.Page = page
 
-	if criteria == "" {
-		return errors.New("Criteria is empty")
-	}
-
 	resources, err := h.courseService.Search(criteria, uint(teacherId), pagination)
 
 	if err != nil {
